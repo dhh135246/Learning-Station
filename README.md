@@ -1,6 +1,7 @@
 # 学習局Learning-Station — 快速上手指南
 
 学習局Learning-Station是一款专为中文日语学习者定制的**极客风、极致日式和风 (Wafuu Modern style)** 离线学习与打字对战平台。本系统完全基于纯前端技术栈构建，不依赖任何云端数据库与后台服务，100% 保护您的个人数据隐私。
+直接访问地址：https://dhh135246.github.io/Learning-Station/
 
 ---
 
