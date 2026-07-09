@@ -141,3 +141,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# 忽略所有备份的进度 JSON 文件
+*.json
+!manifest.json

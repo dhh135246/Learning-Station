@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本語学習ステーション - Japanese Learning Station</title>
+  <!-- 引入 Google 字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 侧边导航栏 -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-jp">日本語学習</span>
+        <span class="brand-en">STATION</span>
+      </div>
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <span class="icon">📊</span> 仪表盘 (Dashboard)
+        </button>
+        <button class="nav-item" data-tab="gojuon">
+          <span class="icon">⛩️</span> 50音道場 (Kana)
+        </button>
+        <button class="nav-item" data-tab="grammar">
+          <span class="icon">✍️</span> 語法工房 (Grammar)
+        </button>
+        <button class="nav-item" data-tab="vocab">
+          <span class="icon">🎴</span> 単語帳 (Vocab)
+        </button>
+        <button class="nav-item" data-tab="typing">
+          <span class="icon">⌨️</span> 入力练习 (Typing)
+        </button>
+        <button class="nav-item" data-tab="resources">
+          <span class="icon">🌐</span> 资源导航 (Links)
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <p>Antigravity AI Co-Pilot</p>
+      </div>
+    </aside>
+
+    <!-- 主展示区 -->
+    <main class="main-content">
+      <!-- 1. 仪表盘模块 -->
+      <section id="dashboard" class="tab-content active">
+        <div class="header-area">
+          <h1>学习进度仪表盘 <span class="subtitle">学習ダッシュボード</span></h1>
+          <div class="mode-selector">
+            <span class="mode-label">当前模式：</span>
+            <button id="btn-mode-fragment" class="mode-btn active">碎片打卡 (10-30m)</button>
+            <button id="btn-mode-intensive" class="mode-btn">深度强化 (2-4h)</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-streak">0</span>
+              <span class="stat-title">连续学习天数</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎴</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-words">0</span>
+              <span class="stat-title">已掌握词汇</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✍️</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-grammar">0</span>
+              <span class="stat-title">已完成语法</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⌨️</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-typing">0</span>
+              <span class="stat-title">打字练习金句</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-details">
+          <!-- 今日任务卡片 -->
+          <div class="content-card today-todo">
+            <h2>🎯 今日学习任务清单 <span class="sub-h2">TODAY'S PLAN</span></h2>
+            <ul class="todo-list" id="todo-list-container">
+              <!-- JS动态生成 -->
+            </ul>
+            <div class="todo-actions">
+              <button id="btn-complete-today" class="primary-btn">完成今日打卡</button>
+            </div>
+          </div>
+          <!-- 动漫兴趣切入点说明 -->
+          <div class="content-card preference-card">
+            <h2>💡 我的定制化兴趣导向 <span class="sub-h2">MY PREFERENCES</span></h2>
+            <div class="preference-tags">
+              <span class="tag tag-isekai">✨ 异世界种田</span>
+              <span class="tag tag-sports">⚽ 运动竞技(足球/棒球)</span>
+              <span class="tag tag-jrock">🎸 日摇乐团</span>
+              <span class="tag tag-grammar">📈 语法专项攻坚</span>
+              <span class="tag tag-pc">💻 PC键盘高频键入</span>
+            </div>
+            <p class="pref-desc">
+              系统将根据这些偏好，在词汇卡片、打字句子、语法解析中优先匹配相关词汇和动漫/歌词例句。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. 50音道場模块 -->
+      <section id="gojuon" class="tab-content">
+        <h1>五十音图道场 <span class="subtitle">五十音図道場</span></h1>
+        <div class="control-bar">
+          <div class="filter-group">
+            <button class="filter-btn active" data-kana-type="hiragana">平假名 (Hiragana)</button>
+            <button class="filter-btn" data-kana-type="katakana">片假名 (Katakana)</button>
+          </div>
+          <button id="btn-kana-quiz" class="action-btn">🎯 进入假名自测</button>
+        </div>
+
+        <!-- 50音网格 -->
+        <div class="gojuon-grid" id="gojuon-grid-container">
+          <!-- JS动态载入五十音卡片 -->
+        </div>
+
+        <!-- 自测弹窗（非阻塞弹窗） -->
+        <div class="quiz-panel hidden" id="kana-quiz-panel">
+          <div class="quiz-header">
+            <h3>⚡ 假名快速反应测试</h3>
+            <button id="btn-close-quiz" class="close-btn">&times;</button>
+          </div>
+          <div class="quiz-body">
+            <div class="quiz-question" id="quiz-question-char">あ</div>
+            <div class="quiz-options" id="quiz-options-container">
+              <!-- 四个选项 -->
+            </div>
+            <div class="quiz-feedback" id="quiz-feedback-text"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 語法工房模块 -->
+      <section id="grammar" class="tab-content">
+        <h1>语法的体系化学习 <span class="subtitle">文法工房</span></h1>
+        <div class="control-bar">
+          <div class="filter-group">
+            <button class="filter-btn active" data-grammar-level="all">全部级别</button>
+            <button class="filter-btn" data-grammar-level="N5">N5 (初级)</button>
+            <button class="filter-btn" data-grammar-level="N4">N4 (中下级)</button>
+          </div>
+        </div>
+
+        <div class="grammar-list" id="grammar-list-container">
+          <!-- JS动态加载语法折叠卡片 -->
+        </div>
+      </section>
+
+      <!-- 4. 单语帐模块 -->
+      <section id="vocab" class="tab-content">
+        <h1>兴趣分类单词卡 <span class="subtitle">単語帳</span></h1>
+        <div class="control-bar">
+          <div class="filter-group">
+            <button class="filter-btn active" data-vocab-cat="all">全部主题</button>
+            <button class="filter-btn" data-vocab-cat="isekai">✨ 异世界与种田</button>
+            <button class="filter-btn" data-vocab-cat="sports">⚽ 运动竞技</button>
+            <button class="filter-btn" data-vocab-cat="jrock">🎸 日摇乐团</button>
+          </div>
+        </div>
+
+        <div class="vocab-grid" id="vocab-grid-container">
+          <!-- JS动态加载词汇卡片 -->
+        </div>
+      </section>
+
+      <!-- 5. 输入练习模块 -->
+      <section id="typing" class="tab-content">
+        <h1>日语键盘键入练习 <span class="subtitle">タイピング練習</span></h1>
+        
+        <div class="typing-container">
+          <div class="typing-card">
+            <!-- 题材标签 -->
+            <span class="typing-tag" id="typing-category-tag">【动漫金句】</span>
+            <!-- 日文展示 -->
+            <div class="jp-sentence" id="typing-jp-text">俺はスローライフを送りたい。</div>
+            <!-- 中文释义 -->
+            <div class="cn-sentence" id="typing-cn-text">我想过慢生活。</div>
+            <!-- 罗马字引导区 -->
+            <div class="romaji-guide" id="typing-romaji-guide">
+              <!-- 动态高亮输入状态 -->
+            </div>
+            <!-- 实时接收输入的隐藏输入框或文本域 -->
+            <input type="text" id="typing-input" autocomplete="off" placeholder="点击此处，在英文输入法状态下根据上方的蓝色罗马字敲击键盘..." />
+          </div>
+
+          <!-- 统计与控制 -->
+          <div class="typing-stats-panel">
+            <div class="t-stat">
+              <span class="t-stat-label">准确率</span>
+              <span class="t-stat-val" id="typing-accuracy">100%</span>
+            </div>
+            <div class="t-stat">
+              <span class="t-stat-label">字数 CPM</span>
+              <span class="t-stat-val" id="typing-cpm">0</span>
+            </div>
+            <button id="btn-next-typing" class="action-btn">跳过此句</button>
+          </div>
+
+          <!-- 虚拟键盘引导（高亮按键） -->
+          <div class="keyboard-guide">
+            <div class="keyboard-row">
+              <div class="key" id="key-Q">Q</div><div class="key" id="key-W">W</div><div class="key" id="key-E">E</div><div class="key" id="key-R">R</div><div class="key" id="key-T">T</div><div class="key" id="key-Y">Y</div><div class="key" id="key-U">U</div><div class="key" id="key-I">I</div><div class="key" id="key-O">O</div><div class="key" id="key-P">P</div>
+            </div>
+            <div class="keyboard-row">
+              <div class="key" id="key-A">A</div><div class="key" id="key-S">S</div><div class="key" id="key-D">D</div><div class="key" id="key-F">F</div><div class="key" id="key-G">G</div><div class="key" id="key-H">H</div><div class="key" id="key-J">J</div><div class="key" id="key-K">K</div><div class="key" id="key-L">L</div>
+            </div>
+            <div class="keyboard-row">
+              <div class="key" id="key-Z">Z</div><div class="key" id="key-X">X</div><div class="key" id="key-C">C</div><div class="key" id="key-V">V</div><div class="key" id="key-B">B</div><div class="key" id="key-N">N</div><div class="key" id="key-M">M</div>
+            </div>
+            <div class="keyboard-row">
+              <div class="key long-key" id="key-SPACE">SPACE</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. 资源导航模块 -->
+      <section id="resources" class="tab-content">
+        <h1>日语在线学习导航 <span class="subtitle">リソースリンク</span></h1>
+        <div class="resources-grid" id="resources-grid-container">
+          <!-- JS动态加载 -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 引入外部数据与逻辑 -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
