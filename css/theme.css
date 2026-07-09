@@ -1,0 +1,942 @@
+/* 导入 Google Fonts 俊秀日式明朝体 (Sawarabi Mincho) 与圆润圆体 (Zen Maru Gothic) */
+@import url('https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&family=Zen+Maru+Gothic:wght@400;700&display=swap');
+
+/* CSS 设计系统与全局样式 (明亮日式和风风格 - Wafuu Theme) */
+:root {
+  --bg-main: #FDFBF7;         /* 暖和纸白 (Warm Washi White) */
+  --bg-card: #ffffff;         /* 素白纸卡 (Paper White Card) */
+  --bg-sidebar: #F4EFE3;      /* 暖竹席黄 (Bamboo Washi Yellow) */
+  --border-glow: rgba(184, 62, 56, 0.12); /* 柔和朱砂红边框 */
+  --color-primary: #B83E38;    /* 朱砂红 (Traditional Cinnabar Red) */
+  --color-secondary: #4A6B53;  /* 抹茶绿 (Matcha Bamboo Green) */
+  --color-accent: #C73E6E;     /* 樱桃姬红 (Sakura Magenta Red) */
+  --color-success: #3A8E5C;    /* 若竹绿 (Wakabamboo Green) */
+  --color-text-main: #2C2924;  /* 煤灰黑 (Charcoal Deep Black) */
+  --color-text-muted: #7E7569; /* 灰茶褐 (Sand Tea Brown) */
+  --shadow-neon: 0 4px 12px rgba(184, 62, 56, 0.08); /* 柔和红影 */
+  --shadow-neon-pink: 0 4px 12px rgba(199, 62, 110, 0.08);
+  --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   🌌 夜樱暗色主题样式覆盖 (Yozakura Dark Theme)
+   ========================================================================== */
+body.dark-theme {
+  --bg-main: #19181F;         /* 消炭黑 / 桔梗夜深蓝 */
+  --bg-card: #22212B;         /* 夜樱深灰紫 */
+  --bg-sidebar: #121117;      /* 墨炭黑 */
+  --border-glow: rgba(199, 62, 110, 0.22); /* 夜樱姬红边框光影 */
+  --color-text-main: #E5E2DB;  /* 和纸米白 */
+  --color-text-muted: #8E8A81; /* 素灰褐 */
+  --shadow-neon: 0 4px 16px rgba(199, 62, 110, 0.12);
+  --shadow-neon-pink: 0 4px 16px rgba(199, 62, 110, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-main);
+  /* 和宣纸/席纹细腻肌理 */
+  background-image: 
+    radial-gradient(rgba(184, 62, 56, 0.015) 1px, transparent 0),
+    radial-gradient(rgba(74, 107, 83, 0.01) 1px, transparent 0);
+  background-size: 24px 24px, 32px 32px;
+  background-position: 0 0, 12px 12px;
+  color: var(--color-text-main);
+  font-family: 'Zen Maru Gothic', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'MS PGothic', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* 侧边导航栏 */
+aside {
+  width: 280px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+}
+
+.brand {
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+}
+
+.brand span {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.3rem;
+  letter-spacing: 1px;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-muted);
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: var(--transition-smooth);
+}
+
+.nav-btn:hover, .nav-btn.active {
+  color: var(--color-primary);
+  background: rgba(184, 62, 56, 0.06);
+  border-color: rgba(184, 62, 56, 0.2);
+}
+
+.nav-btn.active {
+  border-color: var(--color-primary);
+  background: rgba(184, 62, 56, 0.1);
+  color: var(--color-primary);
+}
+
+.nav-btn i {
+  font-size: 1.2rem;
+  width: 24px;
+}
+
+.sidebar-footer {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+/* 主内容区 */
+main {
+  margin-left: 280px;
+  padding: 3rem;
+  width: calc(100% - 280px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 页面面板 Tab 控制 */
+.tab-content {
+  display: none;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 通用日式纸态卡片 */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(184, 62, 56, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: var(--transition-smooth);
+}
+
+.glass-card:hover {
+  border-color: rgba(184, 62, 56, 0.25);
+  box-shadow: 0 8px 32px rgba(184, 62, 56, 0.06), 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* 朱砂红和风按钮 */
+.btn-neon {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  border: none;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 12px rgba(184, 62, 56, 0.2);
+}
+
+.btn-neon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(184, 62, 56, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-outline:hover {
+  background: rgba(184, 62, 56, 0.08);
+}
+
+/* 仪表盘主页 */
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-main);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-val {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-top: 0.5rem;
+}
+
+/* 实用全局输入组件 */
+.input-field {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 0.8rem 1.2rem;
+  color: var(--color-text-main);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.input-field:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 8px rgba(184, 62, 56, 0.12);
+}
+
+/* 响应式适配 */
+@media (max-width: 900px) {
+  aside { width: 80px; padding: 2rem 0.5rem; }
+  aside .brand h1, aside .brand span, aside .nav-btn span, aside .sidebar-footer { display: none; }
+  main { margin-left: 80px; width: calc(100% - 80px); padding: 1.5rem; }
+  .nav-btn { justify-content: center; padding: 1rem; }
+}
+.hidden { display: none !important; }
+
+/* 分页控件样式 */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+}
+
+.pagination-btn {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.1);
+  color: var(--color-text-main);
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: rgba(184, 62, 56, 0.08);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-family: monospace;
+  font-weight: bold;
+}
+
+
+/* 日本语专用字形渲染，确保日语假名与汉字使用正确的日文字体 */
+.jp-text, 
+.kana-char, 
+#canvas-guide, 
+.sentence-display, 
+#typing-target-sentence, 
+.rpg-word-display, 
+.vocab-word-jp, 
+.grammar-card h3,
+#modal-title,
+#modal-examples span,
+.course-table td span[onclick],
+.course-table td strong,
+.word-item-card-jp {
+  font-family: 'Noto Sans JP', 'Meiryo', 'Yu Gothic', 'Hiragino Kaku Gothic Pro', sans-serif !important;
+}
+
+/* 罗马字转假名转换器输入包裹器与状态徽章样式 */
+.romaji-input-wrapper {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.romaji-status-badge {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  user-select: none;
+  z-index: 10;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  font-family: 'Noto Sans JP', sans-serif !important;
+}
+
+.romaji-status-badge:hover {
+  transform: translateY(-50%) scale(1.1);
+  filter: brightness(1.05);
+}
+
+.romaji-status-badge:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* 遗忘预测日历网格样式 */
+.srs-forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.forecast-day-card {
+  background: var(--bg-sidebar);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 0.8rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100px;
+  transition: var(--transition-smooth);
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.forecast-day-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.forecast-date {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.forecast-count {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0.4rem 0;
+  font-family: monospace;
+}
+
+.forecast-label {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* 状态着色 */
+.forecast-empty {
+  background: var(--bg-sidebar) !important;
+  color: var(--color-text-muted) !important;
+}
+.forecast-empty .forecast-count { color: var(--color-text-muted); }
+.forecast-empty .forecast-label { background: rgba(0,0,0,0.03); color: var(--color-text-muted); }
+
+.forecast-low {
+  background: rgba(74, 107, 83, 0.08) !important; /* 淡绿 */
+  border-color: rgba(74, 107, 83, 0.2) !important;
+  color: var(--color-secondary) !important;
+}
+.forecast-low .forecast-count { color: var(--color-secondary); }
+.forecast-low .forecast-label { background: rgba(74, 107, 83, 0.15); color: var(--color-secondary); }
+
+.forecast-mid {
+  background: rgba(74, 107, 83, 0.2) !important; /* 中绿 */
+  border-color: rgba(74, 107, 83, 0.4) !important;
+  color: var(--color-secondary) !important;
+}
+.forecast-mid .forecast-count { color: var(--color-secondary); }
+.forecast-mid .forecast-label { background: var(--color-secondary); color: #fff; }
+
+.forecast-high {
+  background: rgba(184, 62, 56, 0.08) !important; /* 淡红 */
+  border-color: rgba(184, 62, 56, 0.2) !important;
+  color: var(--color-primary) !important;
+}
+.forecast-high .forecast-count { color: var(--color-primary); }
+.forecast-high .forecast-label { background: rgba(184, 62, 56, 0.15); color: var(--color-primary); }
+
+.forecast-peak {
+  background: rgba(184, 62, 56, 0.18) !important; /* 深红 */
+  border-color: rgba(184, 62, 56, 0.4) !important;
+  color: var(--color-primary) !important;
+}
+.forecast-peak .forecast-count { color: var(--color-primary); }
+.forecast-peak .forecast-label { background: var(--color-primary); color: #fff; }
+
+/* 窄屏幕自适应 */
+@media (max-width: 768px) {
+  .srs-forecast-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .srs-forecast-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* 智能生词提取面板及卡片样式 */
+.extracted-words-section {
+  margin-top: 2.2rem;
+  border-top: 1px dashed rgba(0, 0, 0, 0.08);
+  padding-top: 1.8rem;
+}
+
+.extracted-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+
+.extracted-card {
+  background: var(--bg-sidebar);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+  transition: var(--transition-smooth);
+}
+
+.extracted-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  border-color: rgba(74, 107, 83, 0.15);
+}
+
+.extracted-card .input-field {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   🎤 万能文本解析轨 (Lyrics Parser Track) 核心布局重构
+   ========================================================================== */
+
+/* 粘贴文本输入面板容器 */
+.parser-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 打字轨道主卡片容器：强制为 flex 列布局，并设定合理的内边距与最大宽度 */
+.typing-track {
+  display: none; /* 默认隐藏，由 JS startTextParsing 设为 flex */
+  flex-direction: column !important; /* 强制必须是列排布，绝对不允许被解析为 row */
+  gap: 1.8rem;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* 顶部的标题与导航栏 */
+.typing-track-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+  padding-bottom: 1rem;
+}
+
+/* 核心日文歌词/文本句子显示区：大气、居中、宽敞 */
+.sentence-display {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-primary);
+  padding: 1.5rem 1rem;
+  background: var(--bg-sidebar);
+  border-radius: 12px;
+  border: 1px solid rgba(184, 62, 56, 0.08);
+  width: 100%;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+}
+
+/* 听写伴读提示小字 */
+.typing-assist-tip {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 0.2rem;
+}
+
+/* 相似度与字数状态栏 */
+.typing-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* ==========================================================================
+   🌸 极致和风视觉抛光 & 3D 物理动效
+   ========================================================================== */
+
+/* 1. 俊秀日式明朝体 (Sawarabi Mincho) 隔离 */
+.font-mincho {
+  font-family: 'Sawarabi Mincho', 'Hiragino Mincho ProN', 'MS PMincho', 'Yu Mincho', 'MS Mincho', serif !important;
+  font-weight: 700;
+}
+
+/* 2. 按钮 hover 渐变浮光与 active 按压反馈 */
+.btn-neon, .btn-outline, .btn-secondary, .nav-btn, .rpg-option-btn, .romaji-status-badge {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              box-shadow 0.25s ease, 
+              background-color 0.25s ease, 
+              border-color 0.25s ease;
+}
+
+/* 按压回弹物理动感 */
+.btn-neon:active, .btn-outline:active, .btn-secondary:active, .rpg-option-btn:active, .theme-switch-btn:active {
+  transform: scale(0.95) translateY(1.5px) !important;
+}
+
+/* 3. 3D 复习卡牌立体翻页系统 */
+.flashcard-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 550px;
+  height: 280px;
+  margin: 0 auto 1.8rem auto;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+/* 翻牌激活状态 */
+.flashcard-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* 卡牌正反面 */
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.01);
+  transition: var(--transition-smooth);
+}
+
+.flashcard-front {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  color: var(--color-text-main);
+}
+
+.flashcard-back {
+  background: var(--bg-card);
+  border: 1.5px solid var(--color-secondary);
+  color: var(--color-text-main);
+  transform: rotateY(180deg);
+}
+
+/* 4. 折扇错落滑入 CSS 动画 (Sensu Unfolding) */
+@keyframes sensuUnfold {
+  from {
+    opacity: 0;
+    transform: rotate(-3.5deg) translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) translateY(0) scale(1);
+  }
+}
+
+.sensu-unfold {
+  animation: sensuUnfold 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  opacity: 0;
+}
+
+/* 5. 昼夜樱花主题切换器 */
+.theme-switch-container {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+body.dark-theme .theme-switch-container {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+.theme-switch-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  color: var(--color-text-main);
+  padding: 0.6rem 1.4rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.theme-switch-btn:hover {
+  transform: scale(1.04);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(184, 62, 56, 0.1);
+}
+
+body.dark-theme .theme-switch-btn:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 4px 12px rgba(199, 62, 110, 0.15);
+}
+
+/* ==========================================================================
+   📓 离线体验强化与 CORS 突破样式
+   ========================================================================== */
+
+/* 1. 和宣纸拖拽导入文件盘 */
+.washi-drop-zone {
+  border: 2.5px dashed var(--border-glow);
+  background: var(--bg-sidebar);
+  border-radius: 12px;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.washi-drop-zone:hover, .washi-drop-zone.dragover {
+  border-color: var(--color-secondary);
+  background: rgba(74, 107, 83, 0.05);
+  box-shadow: inset 0 0 12px rgba(74, 107, 83, 0.03);
+}
+
+body.dark-theme .washi-drop-zone:hover, body.dark-theme .washi-drop-zone.dragover {
+  border-color: var(--color-accent);
+  background: rgba(199, 62, 110, 0.05);
+  box-shadow: inset 0 0 12px rgba(199, 62, 110, 0.04);
+}
+
+.washi-drop-zone-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* 2. 和风浮动 Web 词典弹窗 */
+.dict-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: none; /* 默认隐藏，由 JS 修改为 flex */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  transition: var(--transition-smooth);
+}
+
+.dict-modal-content {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-glow);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 800px;
+  height: 80%;
+  max-height: 650px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  position: relative;
+  animation: sensuUnfold 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.25) forwards;
+}
+
+.dict-modal-header {
+  background: var(--bg-sidebar);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dict-modal-body {
+  flex-grow: 1;
+  position: relative;
+  background: #ffffff;
+}
+
+body.dark-theme .dict-modal-body {
+  background: #1e1e1e;
+}
+
+.dict-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+}
+
+/* 查词图标微悬浮按钮 */
+.dict-search-btn {
+  cursor: pointer;
+  color: var(--color-secondary);
+  margin-left: 6px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+}
+
+.dict-search-btn:hover {
+  opacity: 1;
+  color: var(--color-primary);
+  transform: scale(1.18);
+}
+
+body.dark-theme .dict-search-btn:hover {
+  color: var(--color-accent);
+}
+
+/* 3. 私人语法笔记修饰卡 */
+.private-note-card {
+  border-left: 4px solid var(--color-accent) !important;
+}
+
+/* ==========================================================================
+   🧭 侧边悬浮折叠词典 (不虚化/不遮挡)
+   ========================================================================== */
+
+main {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+}
+
+/* 展开侧边词典时，主内容区向左收缩避让，保障内容100%不被遮挡，对着边看边打 */
+body.dict-drawer-open main {
+  width: calc(100% - 280px - 360px);
+}
+
+.dict-drawer-panel {
+  position: fixed;
+  top: 0;
+  right: -360px; /* 初始隐藏在右侧界面外 */
+  width: 360px;
+  height: 100vh;
+  background: var(--bg-card);
+  border-left: 1.5px solid var(--border-glow);
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.08);
+  z-index: 9990; /* 介于 modal 与 main 之间 */
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+body.dict-drawer-open .dict-drawer-panel {
+  right: 0; /* 滑入展开 */
+}
+
+.dict-drawer-header {
+  background: var(--bg-sidebar);
+  padding: 0.9rem 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dict-drawer-body {
+  flex-grow: 1;
+  background: #ffffff;
+  position: relative;
+}
+
+body.dark-theme .dict-drawer-body {
+  background: #1e1e1e;
+}
+
+/* 边缘悬浮挂坠小按钮 */
+.dict-drawer-trigger {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+  width: 48px;
+  height: 48px;
+  background: var(--color-secondary);
+  color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(74, 107, 83, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9988;
+  font-size: 1.25rem;
+  transition: var(--transition-smooth);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dict-drawer-trigger:hover {
+  transform: scale(1.1) translateY(-2px);
+  background: var(--color-primary);
+  box-shadow: 0 6px 20px rgba(184, 62, 56, 0.3);
+}
+
+body.dark-theme .dict-drawer-trigger {
+  background: var(--color-accent);
+  box-shadow: 0 4px 16px rgba(199, 62, 110, 0.25);
+}
+
+body.dark-theme .dict-drawer-trigger:hover {
+  background: var(--color-primary);
+}
+
+/* 展开词典时，挂坠优雅移到词典左侧，充当关闭或状态标识 */
+body.dict-drawer-open .dict-drawer-trigger {
+  right: 380px;
+  transform: rotate(180deg);
+  background: var(--color-primary);
+}
+
+
+

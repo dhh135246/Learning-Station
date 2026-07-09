@@ -1,0 +1,21 @@
+{
+  "short_name": "学習局",
+  "name": "日本語学習ステーション - Japanese Learning Station",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#FDFBF7",
+  "theme_color": "#B83E38",
+  "display": "standalone",
+  "orientation": "portrait"
+}

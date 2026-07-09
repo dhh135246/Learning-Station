@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本語学習ステーション - Japanese Learning Station</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS 设计系统与全局样式 */
+    :root {
+      --bg-main: #0a0b10;
+      --bg-card: rgba(20, 22, 37, 0.6);
+      --bg-sidebar: rgba(13, 14, 24, 0.85);
+      --border-glow: rgba(0, 240, 255, 0.15);
+      --color-primary: #00f0ff;    /* 霓虹青 */
+      --color-secondary: #bc34fa;  /* 霓虹紫 */
+      --color-accent: #ff007f;     /* 霓虹粉红 */
+      --color-success: #39ff14;    /* 荧光绿 */
+      --color-text-main: #f0f3f8;
+      --color-text-muted: #8a9fc4;
+      --shadow-neon: 0 0 15px rgba(0, 240, 255, 0.3);
+      --shadow-neon-pink: 0 0 15px rgba(255, 0, 127, 0.3);
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--color-text-main);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* 侧边导航栏 */
+    aside {
+      width: 280px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-glow);
+      backdrop-filter: blur(12px);
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      margin-bottom: 3rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 0.3rem;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex-grow: 1;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--color-text-muted);
+      padding: 0.9rem 1.2rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      color: var(--color-text-main);
+      background: rgba(0, 240, 255, 0.05);
+      border-color: rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.1);
+    }
+
+    .nav-btn.active {
+      border-color: var(--color-primary);
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    .nav-btn i {
+      font-size: 1.2rem;
+      width: 24px;
+    }
+
+    .sidebar-footer {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 1.5rem;
+      text-align: center;
+    }
+
+    /* 主内容区 */
+    main {
+      margin-left: 280px;
+      padding: 3rem;
+      width: calc(100% - 280px);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 页面面板 Tab 控制 */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 通用玻璃态卡片 */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: var(--transition-smooth);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(0, 240, 255, 0.2);
+    }
+
+    /* 霓虹按钮 */
+    .btn-neon {
+      background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+      border: none;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      box-shadow: var(--shadow-neon-pink);
+    }
+
+    .btn-neon:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--color-primary);
+      color: var(--color-primary);
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-outline:hover {
+      background: rgba(0, 240, 255, 0.1);
+      box-shadow: var(--shadow-neon);
+    }
+
+    /* 仪表盘主页 */
+    .dashboard-header {
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-val {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      text-shadow: var(--shadow-neon);
+      margin-top: 0.5rem;
+    }
+
+    /* 实用全局输入组件 */
+    .input-field {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .input-field:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    }
+
+    /* 响应式适配 */
+    @media (max-width: 900px) {
+      aside { width: 80px; padding: 2rem 0.5rem; }
+      aside .brand h1, aside .brand span, aside .nav-btn span, aside .sidebar-footer { display: none; }
+      main { margin-left: 80px; width: calc(100% - 80px); padding: 1.5rem; }
+      .nav-btn { justify-content: center; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 侧边导航栏 -->
+  <aside>
+    <div class="brand">
+      <h1>学習局</h1>
+      <span>LEARNING STATION</span>
+    </div>
+
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('dashboard')">
+        <i>🏠</i> <span>学习看板</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('kana')">
+        <i>🌸</i> <span>50音道場</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('grammar')">
+        <i>🛠️</i> <span>語法工房</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('vocab')">
+        <i>📖</i> <span>単語帳</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('parser')">
+        <i>🎵</i> <span>歌词解析轨</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('data')">
+        <i>⚙️</i> <span>控制中心</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Antigravity Engine v2.0
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main>
+    <!-- TAB 1: 学习看板 -->
+    <section id="dashboard" class="tab-content active">
+      <div class="dashboard-header">
+        <h2>こんにちは！学习者さん</h2>
+        <p style="color: var(--color-text-muted)">这是你的定制化日语训练大厅。今天也要加油！</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="glass-card stat-card">
+          <div>
+            <h3>打卡天数</h3>
+            <p style="color: var(--color-text-muted); font-size: 0.85rem">Daily Streak</p>
+            <div id="streak-val" class="stat-val">0 天</div>
+          </div>
+          <span style="font-size: 3rem">🔥</span>
+        </div>
+
+        <div class="glass-card stat-card">
+          <div>
+            <h3>待复习单词</h3>
+            <p style="color: var(--color-text-muted); font-size: 0.85rem">SRS Review Queue</p>
+            <div id="review-val" class="stat-val">0</div>
+          </div>
+          <span style="font-size: 3rem">⏳</span>
+        </div>
+
+        <div class="glass-card stat-card">
+          <div>
+            <h3>假名掌握度</h3>
+            <p style="color: var(--color-text-muted); font-size: 0.85rem">Kana Mastery</p>
+            <div id="kana-mastery-val" class="stat-val">0%</div>
+          </div>
+          <span style="font-size: 3rem">🎓</span>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-top: 1rem">
+        <h3 style="margin-bottom: 1rem; border-left: 4px solid var(--color-primary); padding-left: 10px;">
+          今日推荐挑战
+        </h3>
+        <p style="margin-bottom: 1.5rem">利用零碎时间，你可以立即进行一个 50音 或是 歌词解析打字 挑战。</p>
+        <div style="display: flex; gap: 1rem;">
+          <button class="btn-neon" onclick="switchTab('kana')">去50音测试</button>
+          <button class="btn-outline" onclick="switchTab('parser')">粘贴歌词练习</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 占位Tab内容容器，后续步骤将依次写入内容 -->
+    <section id="kana" class="tab-content">
+      <style>
+        .kana-nav {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 2rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 1rem;
+        }
+        .kana-nav button {
+          background: transparent;
+          border: none;
+          color: var(--color-text-muted);
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0.5rem 1rem;
+          transition: var(--transition-smooth);
+        }
+        .kana-nav button.active {
+          color: var(--color-primary);
+          border-bottom: 2px solid var(--color-primary);
+        }
+        .kana-panel {
+          display: none;
+        }
+        .kana-panel.active {
+          display: block;
+        }
+        /* 假名表样式 */
+        .grid-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1.5rem;
+        }
+        .kana-grid {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 1rem;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+        .kana-cell {
+          aspect-ratio: 1;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 12px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          transition: var(--transition-smooth);
+          position: relative;
+        }
+        .kana-cell:hover {
+          background: rgba(0, 240, 255, 0.08);
+          border-color: var(--color-primary);
+          transform: translateY(-2px);
+        }
+        .kana-char {
+          font-size: 2.2rem;
+          font-weight: 700;
+        }
+        .kana-romaji {
+          font-size: 0.8rem;
+          color: var(--color-text-muted);
+          margin-top: 0.2rem;
+        }
+        /* 掌握度热力图状态色 */
+        .mastery-high { background: rgba(57, 255, 20, 0.15) !important; border-color: var(--color-success) !important; }
+        .mastery-mid { background: rgba(255, 165, 0, 0.15) !important; border-color: orange !important; }
+        .mastery-low { background: rgba(255, 0, 127, 0.15) !important; border-color: var(--color-accent) !important; }
+
+        /* 测试区域样式 */
+        .quiz-setup {
+          max-width: 500px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .quiz-card {
+          max-width: 500px;
+          margin: 0 auto;
+          text-align: center;
+          display: none;
+        }
+        .quiz-question-box {
+          font-size: 5rem;
+          font-weight: 800;
+          margin: 2rem 0;
+          min-height: 120px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .quiz-options {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+          margin-top: 2rem;
+        }
+        .option-btn {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: white;
+          padding: 1.2rem;
+          font-size: 1.2rem;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: var(--transition-smooth);
+        }
+        .option-btn:hover {
+          background: rgba(0, 240, 255, 0.1);
+          border-color: var(--color-primary);
+        }
+        .option-btn.correct {
+          background: rgba(57, 255, 20, 0.2) !important;
+          border-color: var(--color-success) !important;
+        }
+        .option-btn.wrong {
+          background: rgba(255, 0, 127, 0.2) !important;
+          border-color: var(--color-accent) !important;
+        }
+
+        /* 混淆对决 */
+        .duel-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          justify-content: center;
+          margin-top: 2rem;
+        }
+
+        /* 手写板 */
+        .writing-sandbox {
+          display: flex;
+          gap: 2rem;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .canvas-container {
+          position: relative;
+          background: #11121b;
+          border: 2px dashed rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+          width: 320px;
+          height: 320px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        #canvas-guide {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14rem;
+          color: rgba(255, 255, 255, 0.05);
+          pointer-events: none;
+          user-select: none;
+          font-family: 'Noto Sans JP', sans-serif;
+        }
+        canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          cursor: crosshair;
+          z-index: 10;
+        }
+        .canvas-controls {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          width: 250px;
+        }
+        .canvas-grid-lines {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          border: 1px solid rgba(255,255,255,0.05);
+        }
+        .canvas-grid-lines::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 0;
+          width: 100%;
+          border-top: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+        .canvas-grid-lines::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 0;
+          height: 100%;
+          border-left: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+      </style>
+
+      <div class="kana-nav">
+        <button id="btn-tab-grid" class="active" onclick="switchKanaPanel('grid')">五十音图</button>
+        <button id="btn-tab-quiz" onclick="switchKanaPanel('quiz')">自测挑战</button>
+        <button id="btn-tab-duel" onclick="switchKanaPanel('duel')">易混淆对决</button>
+        <button id="btn-tab-write" onclick="switchKanaPanel('write')">笔顺临摹</button>
+      </div>
+
+      <!-- 面板 1: 五十音图 -->
+      <div id="kana-panel-grid" class="kana-panel active">
+        <div class="grid-header">
+          <h3>假名网格发音看板 (点击发音)</h3>
+          <div>
+            <button class="btn-outline" style="padding: 0.5rem 1rem;" onclick="toggleKanaType('hira')">平假名</button>
+            <button class="btn-outline" style="padding: 0.5rem 1rem;" onclick="toggleKanaType('kata')">片假名</button>
+          </div>
+        </div>
+        <div class="kana-grid" id="kana-grid-container"></div>
+      </div>
+
+      <!-- 面板 2: 自测挑战 -->
+      <div id="kana-panel-quiz" class="kana-panel">
+        <div id="quiz-setup-box" class="quiz-setup glass-card">
+          <h3>自定义测评设置</h3>
+          <div>
+            <label style="display:block; margin-bottom: 0.5rem">测试范围</label>
+            <select id="quiz-scope" class="input-field">
+              <option value="all">平假名 + 片假名</option>
+              <option value="hira">仅平假名 (ひらがな)</option>
+              <option value="kata">仅片假名 (カタカナ)</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; margin-bottom: 0.5rem">题型模式</label>
+            <select id="quiz-mode" class="input-field">
+              <option value="kana-to-romaji">看假名选罗马字</option>
+              <option value="romaji-to-kana">看罗马字选假名</option>
+              <option value="listen-to-kana">听音选假名 (TTS)</option>
+            </select>
+          </div>
+          <button class="btn-neon" onclick="startKanaQuiz()">开始测试</button>
+        </div>
+
+        <div id="quiz-card-box" class="quiz-card glass-card">
+          <div style="display:flex; justify-content:space-between; color: var(--color-text-muted)">
+            <span id="quiz-progress">0/10</span>
+            <span id="quiz-timer">⏱️ 0.0s</span>
+          </div>
+          <div id="quiz-speaker-btn" style="display:none; margin-top: 1rem; cursor:pointer; font-size: 2rem;">🔊</div>
+          <div class="quiz-question-box" id="quiz-q-content">あ</div>
+          <div class="quiz-options" id="quiz-options-container"></div>
+        </div>
+      </div>
+
+      <!-- 面板 3: 易混淆对决 -->
+      <div id="kana-panel-duel" class="kana-panel glass-card">
+        <h3>专项混淆突破挑战</h3>
+        <p style="color: var(--color-text-muted); margin-bottom: 1.5rem">假名形状高度相似，是初期识别度慢的主因。选一组进行高强度辨识对决吧：</p>
+        <div class="duel-container">
+          <button class="btn-outline" onclick="startConfusingDuel(['さ', 'ち'])">さ vs ち</button>
+          <button class="btn-outline" onclick="startConfusingDuel(['れ', 'ね', 'わ'])">れ vs ね vs わ</button>
+          <button class="btn-outline" onclick="startConfusingDuel(['ぬ', 'め'])">ぬ vs め</button>
+          <button class="btn-outline" onclick="startConfusingDuel(['ソ', 'ン'])">片假名 ソ vs ン</button>
+          <button class="btn-outline" onclick="startConfusingDuel(['シ', 'ツ'])">片假名 シ vs ツ</button>
+        </div>
+
+        <div id="duel-quiz-box" style="display:none; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+          <h4 style="text-align: center; margin-bottom: 1rem">快速判断：下方假名的罗马字是？</h4>
+          <div id="duel-question" style="font-size: 6rem; text-align: center; margin-bottom: 2rem; font-weight: 800;">れ</div>
+          <div id="duel-options" style="display:flex; gap:1rem; justify-content:center"></div>
+        </div>
+      </div>
+
+      <!-- 面板 4: 笔顺临摹 -->
+      <div id="kana-panel-write" class="kana-panel glass-card">
+        <h3>触屏/手写临摹沙盒</h3>
+        <p style="color: var(--color-text-muted); margin-bottom: 1.5rem">选择右侧假名可在背景生成灰色临摹字迹，使用鼠标/手指可在画板内书写。</p>
+        
+        <div class="writing-sandbox">
+          <div class="canvas-container">
+            <div class="canvas-grid-lines"></div>
+            <div id="canvas-guide"></div>
+            <canvas id="writing-canvas" width="320" height="320"></canvas>
+          </div>
+          
+          <div class="canvas-controls">
+            <button class="btn-neon" onclick="clearWritingCanvas()">清除画板</button>
+            <button class="btn-outline" onclick="playWritingVoice()">发音示范</button>
+            <select id="canvas-select-kana" class="input-field" onchange="loadCanvasGuide(this.value)">
+              <option value="">-- 选择临摹假名 --</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // 50音基础数据
+        const KANA_DATA = [
+          { hira: 'あ', kata: 'ア', romaji: 'a' },  { hira: 'い', kata: 'イ', romaji: 'i' },  { hira: 'う', kata: 'ウ', romaji: 'u' },  { hira: 'え', kata: 'エ', romaji: 'e' },  { hira: 'お', kata: 'オ', romaji: 'o' },
+          { hira: 'か', kata: 'カ', romaji: 'ka' }, { hira: 'き', kata: 'キ', romaji: 'ki' }, { hira: 'く', kata: 'ク', romaji: 'ku' }, { hira: 'け', kata: 'ケ', romaji: 'ke' }, { hira: 'こ', kata: 'コ', romaji: 'ko' },
+          { hira: 'さ', kata: 'サ', romaji: 'sa' }, { hira: 'し', kata: 'シ', romaji: 'shi' },{ hira: 'す', kata: 'ス', romaji: 'su' }, { hira: 'せ', kata: 'セ', romaji: 'se' }, { hira: 'そ', kata: 'ソ', romaji: 'so' },
+          { hira: 'た', kata: 'タ', romaji: 'ta' }, { hira: 'ち', kata: 'チ', romaji: 'chi' },{ hira: 'つ', kata: 'ツ', romaji: 'tsu' },{ hira: 'て', kata: 'テ', romaji: 'te' }, { hira: 'と', kata: 'ト', romaji: 'to' },
+          { hira: 'な', kata: 'ナ', romaji: 'na' }, { hira: 'に', kata: 'ニ', romaji: 'ni' }, { hira: 'ぬ', kata: 'ヌ', romaji: 'nu' }, { hira: 'ね', kata: 'ネ', romaji: 'ne' }, { hira: 'の', kata: 'ノ', romaji: 'no' },
+          { hira: 'は', kata: 'ハ', romaji: 'ha' }, { hira: 'ひ', kata: 'ヒ', romaji: 'hi' }, { hira: 'ふ', kata: 'フ', romaji: 'fu' }, { hira: 'へ', kata: 'ヘ', romaji: 'he' }, { hira: 'ほ', kata: 'ホ', romaji: 'ho' },
+          { hira: 'ま', kata: 'マ', romaji: 'ma' }, { hira: 'み', kata: 'ミ', romaji: 'mi' }, { hira: 'む', kata: 'ム', romaji: 'mu' }, { hira: 'め', kata: 'メ', romaji: 'me' }, { hira: 'も', kata: 'モ', romaji: 'mo' },
+          { hira: 'や', kata: 'ヤ', romaji: 'ya' }, { hira: 'ゆ', kata: 'ユ', romaji: 'yu' }, { hira: 'よ', kata: 'ヨ', romaji: 'yo' },
+          { hira: 'ら', kata: 'ラ', romaji: 'ra' }, { hira: 'り', kata: 'リ', romaji: 'ri' }, { hira: 'る', kata: 'ル', romaji: 'ru' }, { hira: 'れ', kata: 'レ', romaji: 're' }, { hira: 'ろ', kata: 'ロ', romaji: 'ro' },
+          { hira: 'わ', kata: 'ワ', romaji: 'wa' }, { hira: 'を', kata: 'ヲ', romaji: 'wo' }, { hira: 'ん', kata: 'ン', romaji: 'nn' }
+        ];
+
+        let currentKanaType = 'hira'; // hira or kata
+
+        // 初始化面板
+        function init_kana() {
+          renderKanaGrid();
+          initWritingCanvas();
+          populateCanvasSelect();
+        }
+
+        function switchKanaPanel(panelId) {
+          document.querySelectorAll('.kana-panel').forEach(p => p.classList.remove('active'));
+          document.querySelectorAll('.kana-nav button').forEach(b => b.classList.remove('active'));
+          
+          document.getElementById(`kana-panel-${panelId}`).classList.add('active');
+          document.getElementById(`btn-tab-${panelId}`).classList.add('active');
+        }
+
+        // 渲染假名热力图
+        function renderKanaGrid() {
+          const container = document.getElementById('kana-grid-container');
+          container.innerHTML = '';
+          const mastery = JSON.parse(localStorage.getItem('kana_mastery') || '{}');
+
+          KANA_DATA.forEach(item => {
+            const cell = document.createElement('div');
+            cell.className = 'kana-cell';
+            const char = currentKanaType === 'hira' ? item.hira : item.kata;
+            
+            // 计算热度
+            const record = mastery[char];
+            if (record) {
+              if (record.wrong > 1) {
+                cell.classList.add('mastery-low'); // 错的多底红
+              } else if (record.correct >= 3) {
+                cell.classList.add('mastery-high'); // 对的起飞底绿
+              } else if (record.correct > 0) {
+                cell.classList.add('mastery-mid'); // 底橙
+              }
+            }
+
+            cell.innerHTML = `
+              <span class="kana-char">${char}</span>
+              <span class="kana-romaji">${item.romaji}</span>
+            `;
+            cell.onclick = () => AudioCenter.speak(char);
+            container.appendChild(cell);
+          });
+        }
+
+        function toggleKanaType(type) {
+          currentKanaType = type;
+          renderKanaGrid();
+        }
+
+        // 测试控制
+        let quizQuestions = [];
+        let currentQuizIndex = 0;
+        let quizTimerInterval;
+        let quizStartTime;
+
+        function startKanaQuiz() {
+          const scope = document.getElementById('quiz-scope').value;
+          const mode = document.getElementById('quiz-mode').value;
+          
+          // 挑选池
+          let pool = [];
+          if (scope === 'hira' || scope === 'all') {
+            pool = pool.concat(KANA_DATA.map(i => ({ char: i.hira, romaji: i.romaji })));
+          }
+          if (scope === 'kata' || scope === 'all') {
+            pool = pool.concat(KANA_DATA.map(i => ({ char: i.kata, romaji: i.romaji })));
+          }
+
+          // 乱序抽取10个
+          pool.sort(() => Math.random() - 0.5);
+          quizQuestions = pool.slice(0, 10);
+          currentQuizIndex = 0;
+
+          document.getElementById('quiz-setup-box').style.display = 'none';
+          document.getElementById('quiz-card-box').style.display = 'block';
+
+          quizStartTime = Date.now();
+          quizTimerInterval = setInterval(() => {
+            const sec = ((Date.now() - quizStartTime) / 1000).toFixed(1);
+            document.getElementById('quiz-timer').innerText = `⏱️ ${sec}s`;
+          }, 100);
+
+          showQuizQuestion(mode);
+        }
+
+        function showQuizQuestion(mode) {
+          if (currentQuizIndex >= 10) {
+            endQuiz();
+            return;
+          }
+
+          document.getElementById('quiz-progress').innerText = `${currentQuizIndex + 1}/10`;
+          const current = quizQuestions[currentQuizIndex];
+          const qContent = document.getElementById('quiz-q-content');
+          const speaker = document.getElementById('quiz-speaker-btn');
+          
+          speaker.style.display = mode === 'listen-to-kana' ? 'block' : 'none';
+          speaker.onclick = () => AudioCenter.speak(current.char);
+
+          if (mode === 'listen-to-kana') {
+            qContent.innerText = '？';
+            AudioCenter.speak(current.char);
+          } else if (mode === 'kana-to-romaji') {
+            qContent.innerText = current.char;
+          } else {
+            qContent.innerText = current.romaji;
+          }
+
+          // 生成选项
+          let options = [];
+          if (mode === 'kana-to-romaji') {
+            options.push(current.romaji);
+            while (options.length < 4) {
+              const r = KANA_DATA[Math.floor(Math.random() * KANA_DATA.length)].romaji;
+              if (!options.includes(r)) options.push(r);
+            }
+          } else {
+            options.push(current.char);
+            while (options.length < 4) {
+              const poolChar = KANA_DATA[Math.floor(Math.random() * KANA_DATA.length)];
+              const c = Math.random() > 0.5 ? poolChar.hira : poolChar.kata;
+              if (!options.includes(c)) options.push(c);
+            }
+          }
+          options.sort(() => Math.random() - 0.5);
+
+          const optContainer = document.getElementById('quiz-options-container');
+          optContainer.innerHTML = '';
+          options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkQuizAnswer(btn, opt, current, mode);
+            optContainer.appendChild(btn);
+          });
+        }
+
+        function checkQuizAnswer(btn, chosen, current, mode) {
+          // 锁定所有按钮防止连点
+          document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+          
+          const isCorrect = (mode === 'kana-to-romaji' && chosen === current.romaji) || 
+                            (mode !== 'kana-to-romaji' && chosen === current.char);
+          
+          // 更新本地数据
+          const mastery = JSON.parse(localStorage.getItem('kana_mastery') || '{}');
+          if (!mastery[current.char]) mastery[current.char] = { correct: 0, wrong: 0 };
+
+          if (isCorrect) {
+            btn.classList.add('correct');
+            mastery[current.char].correct++;
+          } else {
+            btn.classList.add('wrong');
+            mastery[current.char].wrong++;
+            
+            // 找出正确答案高亮
+            document.querySelectorAll('.option-btn').forEach(b => {
+              if (b.innerText === (mode === 'kana-to-romaji' ? current.romaji : current.char)) {
+                b.classList.add('correct');
+              }
+            });
+          }
+
+          localStorage.setItem('kana_mastery', JSON.stringify(mastery));
+
+          setTimeout(() => {
+            currentQuizIndex++;
+            showQuizQuestion(mode);
+          }, 1200);
+        }
+
+        function endQuiz() {
+          clearInterval(quizTimerInterval);
+          alert('测试完成！正在返回设置主页。');
+          document.getElementById('quiz-setup-box').style.display = 'block';
+          document.getElementById('quiz-card-box').style.display = 'none';
+          updateDashboardStats();
+          renderKanaGrid();
+        }
+
+        // 混淆对决
+        let duelGroup = [];
+        let currentDuelTarget = '';
+        function startConfusingDuel(chars) {
+          duelGroup = chars;
+          document.getElementById('duel-quiz-box').style.display = 'block';
+          nextDuel();
+        }
+
+        function nextDuel() {
+          currentDuelTarget = duelGroup[Math.floor(Math.random() * duelGroup.length)];
+          document.getElementById('duel-question').innerText = currentDuelTarget;
+
+          const matchItem = KANA_DATA.find(i => i.hira === currentDuelTarget || i.kata === currentDuelTarget) || {romaji: ''};
+          
+          const options = duelGroup.map(char => {
+            const item = KANA_DATA.find(i => i.hira === char || i.kata === char);
+            return item ? item.romaji : '';
+          });
+
+          const optBox = document.getElementById('duel-options');
+          optBox.innerHTML = '';
+          options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-outline';
+            btn.style.padding = '1rem 2rem';
+            btn.innerText = opt;
+            btn.onclick = () => {
+              if (opt === matchItem.romaji) {
+                btn.style.borderColor = 'var(--color-success)';
+                btn.style.color = 'var(--color-success)';
+                AudioCenter.speak(currentDuelTarget);
+                setTimeout(nextDuel, 500);
+              } else {
+                btn.style.borderColor = 'var(--color-accent)';
+                btn.style.color = 'var(--color-accent)';
+              }
+            };
+            optBox.appendChild(btn);
+          });
+        }
+
+        // 画布书写引擎
+        let canvas, ctx, isDrawing = false;
+        function initWritingCanvas() {
+          canvas = document.getElementById('writing-canvas');
+          ctx = canvas.getContext('2d');
+          ctx.strokeStyle = '#00f0ff';
+          ctx.lineWidth = 10;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+
+          const getPos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+              x: clientX - rect.left,
+              y: clientY - rect.top
+            };
+          };
+
+          const startDraw = (e) => {
+            isDrawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            e.preventDefault();
+          };
+
+          const draw = (e) => {
+            if (!isDrawing) return;
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            e.preventDefault();
+          };
+
+          const stopDraw = () => isDrawing = false;
+
+          canvas.addEventListener('mousedown', startDraw);
+          canvas.addEventListener('mousemove', draw);
+          canvas.addEventListener('mouseup', stopDraw);
+          canvas.addEventListener('mouseout', stopDraw);
+
+          canvas.addEventListener('touchstart', startDraw);
+          canvas.addEventListener('touchmove', draw);
+          canvas.addEventListener('touchend', stopDraw);
+        }
+
+        function clearWritingCanvas() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function populateCanvasSelect() {
+          const select = document.getElementById('canvas-select-kana');
+          KANA_DATA.forEach(i => {
+            const optHira = document.createElement('option');
+            optHira.value = i.hira;
+            optHira.innerText = `平 - ${i.hira} (${i.romaji})`;
+            select.appendChild(optHira);
+            const optKata = document.createElement('option');
+            optKata.value = i.kata;
+            optKata.innerText = `片 - ${i.kata} (${i.romaji})`;
+            select.appendChild(optKata);
+          });
+        }
+
+        function loadCanvasGuide(char) {
+          document.getElementById('canvas-guide').innerText = char;
+          clearWritingCanvas();
+          if (char) AudioCenter.speak(char);
+        }
+
+        function playWritingVoice() {
+          const char = document.getElementById('canvas-select-kana').value;
+          if (char) AudioCenter.speak(char);
+        }
+      </script>
+    </section>
+
+    <section id="grammar" class="tab-content">
+      <style>
+        .grammar-nav {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 2rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 1rem;
+        }
+        .grammar-nav button {
+          background: transparent;
+          border: none;
+          color: var(--color-text-muted);
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0.5rem 1rem;
+          transition: var(--transition-smooth);
+        }
+        .grammar-nav button.active {
+          color: var(--color-primary);
+          border-bottom: 2px solid var(--color-primary);
+        }
+        .grammar-panel {
+          display: none;
+        }
+        .grammar-panel.active {
+          display: block;
+        }
+        /* 语法列表样式 */
+        .grammar-list {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 1.5rem;
+        }
+        .grammar-card {
+          cursor: pointer;
+        }
+        .grammar-tag {
+          font-size: 0.75rem;
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+        .tag-particle { background: rgba(0, 240, 255, 0.15); color: var(--color-primary); }
+        .tag-verb { background: rgba(188, 52, 250, 0.15); color: var(--color-secondary); }
+        .tag-pattern { background: rgba(255, 0, 127, 0.15); color: var(--color-accent); }
+        
+        .grammar-detail-modal {
+          position: fixed;
+          top: 0; left: 0; width: 100vw; height: 100vh;
+          background: rgba(10, 11, 16, 0.85);
+          backdrop-filter: blur(8px);
+          display: none;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+        .modal-content {
+          width: 90%;
+          max-width: 600px;
+          animation: modalFade 0.3s ease-out;
+        }
+        @keyframes modalFade {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        /* 拼图/卡片排序 */
+        .card-slots {
+          display: flex;
+          gap: 0.8rem;
+          min-height: 60px;
+          border: 1px dashed rgba(255, 255, 255, 0.2);
+          border-radius: 8px;
+          padding: 0.8rem;
+          margin-bottom: 1.5rem;
+          flex-wrap: wrap;
+          background: rgba(0,0,0,0.2);
+        }
+        .word-pool {
+          display: flex;
+          gap: 0.8rem;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .word-card {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: white;
+          padding: 0.6rem 1.2rem;
+          border-radius: 8px;
+          cursor: pointer;
+          user-select: none;
+          font-size: 1.1rem;
+          transition: var(--transition-smooth);
+        }
+        .word-card:hover {
+          background: rgba(0, 240, 255, 0.15);
+          border-color: var(--color-primary);
+        }
+        .word-card.selected {
+          opacity: 0.3;
+          pointer-events: none;
+        }
+      </style>
+
+      <div class="grammar-nav">
+        <button id="btn-g-list" class="active" onclick="switchGrammarPanel('list')">核心语法库</button>
+        <button id="btn-g-particle" onclick="switchGrammarPanel('particle')">助词挖空练</button>
+        <button id="btn-g-verb" onclick="switchGrammarPanel('verb')">动词变形挑战</button>
+        <button id="btn-g-sort" onclick="switchGrammarPanel('sort')">连词成句</button>
+      </div>
+
+      <!-- 面板 1: 语法浏览 -->
+      <div id="grammar-panel-list" class="grammar-panel active">
+        <div class="grammar-list" id="grammar-cards-container"></div>
+      </div>
+
+      <!-- 语法详情模态框 -->
+      <div id="grammar-modal" class="grammar-detail-modal" onclick="closeGrammarModal()">
+        <div class="glass-card modal-content" onclick="event.stopPropagation()">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem">
+            <span class="grammar-tag tag-particle" id="modal-tag">助词</span>
+            <button class="btn-outline" style="padding: 0.3rem 0.6rem;" onclick="closeGrammarModal()">✕ 关闭</button>
+          </div>
+          <h2 id="modal-title" style="margin-bottom: 1rem">は (wa)</h2>
+          <h4 id="modal-meaning" style="color: var(--color-primary); margin-bottom: 1.5rem">提示主题</h4>
+          <p id="modal-explain" style="color: var(--color-text-muted); line-height: 1.6; margin-bottom: 1.5rem"></p>
+          <div style="background: rgba(0,0,0,0.2); padding: 1.2rem; border-radius: 8px;">
+            <p style="font-weight:bold; margin-bottom: 0.5rem">经典场景例句：</p>
+            <div id="modal-examples"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 面板 2: 助词填空 -->
+      <div id="grammar-panel-particle" class="grammar-panel">
+        <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+          <h3 style="margin-bottom: 1.5rem; text-align: center">选择最恰当的助词补全句子</h3>
+          <div id="p-question" style="font-size: 1.6rem; text-align: center; margin: 2rem 0; font-weight:700;">私はお茶 [ ? ] 飲みます。</div>
+          <div id="p-translation" style="text-align: center; color: var(--color-text-muted); margin-bottom: 2rem;">我喝茶。</div>
+          <div id="p-options" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;"></div>
+        </div>
+      </div>
+
+      <!-- 面板 3: 动词变形 -->
+      <div id="grammar-panel-verb" class="grammar-panel">
+        <div class="glass-card" style="max-width: 600px; margin: 0 auto; text-align: center;">
+          <h3>根据提示写出动词的正确变形</h3>
+          <div id="v-verb-original" style="font-size: 2.5rem; font-weight: 800; color: var(--color-secondary); margin: 1.5rem 0;">食べる</div>
+          <div id="v-task" style="font-size: 1.2rem; margin-bottom: 1.5rem;">变形目标：<span style="color: var(--color-primary); font-weight:bold" id="v-target-name">想吃 (たい形)</span></div>
+          
+          <div style="margin-bottom: 1.5rem">
+            <input type="text" id="v-user-input" class="input-field" placeholder="请键入日语变形，如: たべたい" style="max-width: 300px; text-align: center; font-size: 1.2rem;" onkeydown="if(event.key==='Enter') checkVerbAnswer()">
+          </div>
+          <div style="display: flex; gap:1rem; justify-content:center">
+            <button class="btn-neon" onclick="checkVerbAnswer()">提交验证</button>
+            <button class="btn-outline" onclick="nextVerbQuestion()">跳过</button>
+          </div>
+          <div id="v-feedback" style="margin-top: 1.5rem; font-size: 1.2rem; min-height: 30px;"></div>
+        </div>
+      </div>
+
+      <!-- 面板 4: 连词成句 -->
+      <div id="grammar-panel-sort" class="grammar-panel">
+        <div class="glass-card" style="max-width: 650px; margin: 0 auto;">
+          <h3 style="text-align: center; margin-bottom: 1rem">连词成句排序</h3>
+          <p id="s-translation" style="text-align: center; color: var(--color-primary); font-size: 1.2rem; margin-bottom: 2rem;">我明天打算去东京。</p>
+          
+          <div class="card-slots" id="sort-slots-container"></div>
+          <div class="word-pool" id="sort-pool-container"></div>
+          
+          <div style="display: flex; gap:1rem; justify-content:center; margin-top: 2.5rem">
+            <button class="btn-neon" onclick="checkSortAnswer()">检查排序</button>
+            <button class="btn-outline" onclick="resetSortQuiz()">重置重来</button>
+            <button class="btn-outline" onclick="nextSortQuestion()">下一题</button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // 核心语法库数据
+        const GRAMMAR_DATABASE = [
+          {
+            title: 'は (wa)',
+            category: 'particle',
+            meaning: '提示句子的主题',
+            explain: '接在名词后，用来提示句子的话题。在口语中表示「关于某某嘛…」。',
+            examples: [
+              { jp: '俺は海賊王になる男だ！', cn: '我是要成为海贼王的男人！ (海贼王)' },
+              { jp: 'これは私の本です。', cn: '这是我的书。' }
+            ]
+          },
+          {
+            title: 'が (ga)',
+            category: 'particle',
+            meaning: '提示主语，强调主语本身',
+            explain: '用于提示句子的主语。当你想表达「正是这个」或者回答谁做某事时使用。与「は」相比更侧重主语。',
+            examples: [
+              { jp: '俺がやる！', cn: '我来做！ (强调是我自己)' },
+              { jp: '猫が好きです。', cn: '喜欢猫。' }
+            ]
+          },
+          {
+            title: 'を (o)',
+            category: 'particle',
+            meaning: '提示动作的对象 (宾语)',
+            explain: '接在名词后面，提示该名词是后续及物动词（他动词）的宾语。',
+            examples: [
+              { jp: 'ご飯を食べます。', cn: '吃饭。' },
+              { jp: 'サッカーをします。', cn: '踢足球。' }
+            ]
+          },
+          {
+            title: '～たい (-tai)',
+            category: 'verb',
+            meaning: '表示想做某事',
+            explain: '动词ます形（去掉ます）加たい。表示说话者的主观意愿。',
+            examples: [
+              { jp: '日本に行きたいです。', cn: '想去日本。' },
+              { jp: '魔法が使いたい！', cn: '我想使用魔法！ (异世界动漫常见)' }
+            ]
+          },
+          {
+            title: '～てください (-te kudasai)',
+            category: 'pattern',
+            meaning: '表示礼貌地请求或指示',
+            explain: '动词て形加ください。在日常生活中或教导人时极常用。',
+            examples: [
+              { jp: '教えてください。', cn: '请教教我。' },
+              { jp: '諦めないでください。', cn: '请不要放弃。' }
+            ]
+          },
+          {
+            title: '～ている (-te iru)',
+            category: 'verb',
+            meaning: '表示正在进行或状态的持续',
+            explain: '动词て形加いる。对应中文的「正在…」或「…着」。',
+            examples: [
+              { jp: '今、勉強している。', cn: '现在正在学习。' },
+              { jp: '俺は生きている！', cn: '我还活着！' }
+            ]
+          },
+          {
+            title: '～たことがある (-ta koto ga aru)',
+            category: 'pattern',
+            meaning: '表示曾经做过某事 (过去经历)',
+            explain: '动词た形（过去式）加ことがある。常用来讲述经历。',
+            examples: [
+              { jp: '日本料理を食べたことがあります。', cn: '我吃过日本料理。' },
+              { jp: 'その曲を聞いたことがあります。', cn: '我听过那首歌。' }
+            ]
+          },
+          {
+            title: '～つもり (-tsumuri)',
+            category: 'pattern',
+            meaning: '表示主观打算或计划',
+            explain: '动词简体形加つもり。用于向他人陈述自己接下来的意图。',
+            examples: [
+              { jp: '明日、東京へ行くつもりです。', cn: '打算明天去东京。' },
+              { jp: '強くなるつもりだ！', cn: '我一定要变强！' }
+            ]
+          }
+        ];
+
+        // 初始化语法工厂
+        function init_grammar() {
+          renderGrammarList();
+          nextParticleQuestion();
+          nextVerbQuestion();
+          nextSortQuestion();
+        }
+
+        function switchGrammarPanel(panelId) {
+          document.querySelectorAll('.grammar-panel').forEach(p => p.classList.remove('active'));
+          document.querySelectorAll('.grammar-nav button').forEach(b => b.classList.remove('active'));
+          
+          document.getElementById(`grammar-panel-${panelId}`).classList.add('active');
+          document.getElementById(`btn-g-${panelId}`).classList.add('active');
+        }
+
+        // 渲染列表
+        function renderGrammarList() {
+          const container = document.getElementById('grammar-cards-container');
+          container.innerHTML = '';
+          
+          GRAMMAR_DATABASE.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'glass-card grammar-card';
+            card.onclick = () => openGrammarModal(item);
+            
+            let tagClass = 'tag-pattern';
+            let tagCN = '句型';
+            if (item.category === 'particle') { tagClass = 'tag-particle'; tagCN = '助词'; }
+            else if (item.category === 'verb') { tagClass = 'tag-verb'; tagCN = '动词变形'; }
+
+            card.innerHTML = `
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem">
+                <span class="grammar-tag ${tagClass}">${tagCN}</span>
+              </div>
+              <h3 style="font-size: 1.4rem; margin-bottom: 0.5rem">${item.title}</h3>
+              <p style="color: var(--color-primary); font-size: 0.9rem; font-weight:600">${item.meaning}</p>
+            `;
+            container.appendChild(card);
+          });
+        }
+
+        // 模态框打开关闭
+        function openGrammarModal(item) {
+          document.getElementById('modal-title').innerText = item.title;
+          document.getElementById('modal-meaning').innerText = item.meaning;
+          document.getElementById('modal-explain').innerText = item.explain;
+          
+          let tagCN = '句型';
+          let tagClass = 'tag-pattern';
+          if (item.category === 'particle') { tagClass = 'tag-particle'; tagCN = '助词'; }
+          else if (item.category === 'verb') { tagClass = 'tag-verb'; tagCN = '动词变形'; }
+          
+          const tagEl = document.getElementById('modal-tag');
+          tagEl.className = `grammar-tag ${tagClass}`;
+          tagEl.innerText = tagCN;
+
+          const exBox = document.getElementById('modal-examples');
+          exBox.innerHTML = '';
+          item.examples.forEach(ex => {
+            const p = document.createElement('p');
+            p.style.margin = '0.5rem 0';
+            p.innerHTML = `<span style="color:var(--color-primary); font-size: 1.1rem; cursor:pointer;" onclick="AudioCenter.speak('${ex.jp}')">🔊 ${ex.jp}</span><br><span style="color:var(--color-text-muted); font-size: 0.9rem">${ex.cn}</span>`;
+            exBox.appendChild(p);
+          });
+
+          document.getElementById('grammar-modal').style.display = 'flex';
+        }
+
+        function closeGrammarModal() {
+          document.getElementById('grammar-modal').style.display = 'none';
+        }
+
+        // 助词测试题库
+        const PARTICLE_QUIZZES = [
+          { q: '私はお茶 [ ? ] 飲みます。', trans: '我喝茶。', ans: 'を', opts: ['を', 'は', 'に', 'が'] },
+          { q: '学校 [ ? ] 行きます。', trans: '去学校。', ans: 'に', opts: ['に', 'を', 'で', 'と'] },
+          { q: '図書館 [ ? ] 勉強します。', trans: '在图书馆学习。', ans: 'で', opts: ['で', 'に', 'を', 'が'] },
+          { q: '猫 [ ? ] います。', trans: '有猫在（侧重存在对象）。', ans: 'が', opts: ['が', 'は', 'を', 'に'] },
+          { q: '友達 [ ? ] 会います。', trans: '和朋友见面。', ans: 'に', opts: ['に', 'と', 'を', 'で'] }
+        ];
+        let currentPIndex = 0;
+
+        function nextParticleQuestion() {
+          const quiz = PARTICLE_QUIZZES[currentPIndex];
+          document.getElementById('p-question').innerText = quiz.q;
+          document.getElementById('p-translation').innerText = quiz.trans;
+
+          const optBox = document.getElementById('p-options');
+          optBox.innerHTML = '';
+          quiz.opts.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => {
+              document.querySelectorAll('#p-options button').forEach(b => b.disabled = true);
+              if (opt === quiz.ans) {
+                btn.classList.add('correct');
+              } else {
+                btn.classList.add('wrong');
+                // 高亮正确答案
+                Array.from(document.querySelectorAll('#p-options button')).find(b => b.innerText === quiz.ans).classList.add('correct');
+              }
+              setTimeout(() => {
+                currentPIndex = (currentPIndex + 1) % PARTICLE_QUIZZES.length;
+                nextParticleQuestion();
+              }, 1500);
+            };
+            optBox.appendChild(btn);
+          });
+        }
+
+        // 动词变形练习库
+        const VERB_QUIZZES = [
+          { original: '食べる (taberu)', conjugation: '想吃 (たい形)', ans: '食べたい', romaji: 'tabetai' },
+          { original: '行く (iku)', conjugation: '请去 (てください)', ans: '行ってください', romaji: 'ittekudasai' },
+          { original: '勉強する (benkyou suru)', conjugation: '正在学习 (ている形)', ans: '勉強している', romaji: 'benkyouteiru' },
+          { original: '飲む (nomu)', conjugation: '喝过 (た形/过去时)', ans: '饮んだ', romaji: 'nonda' },
+          { original: '話す (hanasu)', conjugation: '能说 (可能形)', ans: '話せる', romaji: 'hanaseru' }
+        ];
+        let currentVIndex = 0;
+
+        function nextVerbQuestion() {
+          const quiz = VERB_QUIZZES[currentVIndex];
+          document.getElementById('v-verb-original').innerText = quiz.original;
+          document.getElementById('v-target-name').innerText = quiz.conjugation;
+          document.getElementById('v-user-input').value = '';
+          document.getElementById('v-feedback').innerHTML = '';
+          document.getElementById('v-user-input').disabled = false;
+        }
+
+        function checkVerbAnswer() {
+          const input = document.getElementById('v-user-input').value.trim().toLowerCase();
+          const quiz = VERB_QUIZZES[currentVIndex];
+          const feedback = document.getElementById('v-feedback');
+          
+          if (!input) return;
+          
+          // 支持罗马字和假名比对
+          if (input === quiz.ans || input === quiz.romaji) {
+            feedback.innerHTML = '<span style="color:var(--color-success)">🎉 正确！完美匹配！</span>';
+            AudioCenter.speak(quiz.ans);
+            document.getElementById('v-user-input').disabled = true;
+            setTimeout(() => {
+              currentVIndex = (currentVIndex + 1) % VERB_QUIZZES.length;
+              nextVerbQuestion();
+            }, 1800);
+          } else {
+            feedback.innerHTML = `<span style="color:var(--color-accent)">❌ 不太对哦，正确答案是: <strong style="color:white">${quiz.ans}</strong> (${quiz.romaji})</span>`;
+          }
+        }
+
+        // 连词成句
+        const SORT_QUIZZES = [
+          { cn: '我明天打算去东京。', tokens: ['明日', '東京へ', '行く', 'つもりです'], correctStr: '明日東京へ行くつもりです' },
+          { cn: '请吃苹果。', tokens: ['りんごを', '食べて', 'ください'], correctStr: 'りんごを食べてください' },
+          { cn: '我想看动漫。', tokens: ['アニメが', '見たい', 'です'], correctStr: 'アニメが見たいいです' }
+        ];
+        let currentSIndex = 0;
+        let selectedTokens = [];
+
+        function nextSortQuestion() {
+          const quiz = SORT_QUIZZES[currentSIndex];
+          document.getElementById('s-translation').innerText = quiz.cn;
+          selectedTokens = [];
+          
+          // 洗牌生成备选项
+          const pool = [...quiz.tokens].sort(() => Math.random() - 0.5);
+          
+          renderSortLayout(pool);
+        }
+
+        function renderSortLayout(pool) {
+          const slots = document.getElementById('sort-slots-container');
+          slots.innerHTML = '';
+          selectedTokens.forEach((tok, index) => {
+            const span = document.createElement('span');
+            span.className = 'word-card';
+            span.innerText = tok;
+            span.onclick = () => {
+              selectedTokens.splice(index, 1);
+              renderSortLayout(pool);
+            };
+            slots.appendChild(span);
+          });
+
+          const poolBox = document.getElementById('sort-pool-container');
+          poolBox.innerHTML = '';
+          pool.forEach(tok => {
+            const card = document.createElement('div');
+            card.className = 'word-card';
+            // 计算被选中的数量来决定是否高亮置灰
+            const instancesInSelected = selectedTokens.filter(t => t === tok).length;
+            const totalInPool = pool.filter(t => t === tok).length;
+
+            if (instancesInSelected >= totalInPool) {
+              card.classList.add('selected');
+            } else {
+              card.onclick = () => {
+                selectedTokens.push(tok);
+                renderSortLayout(pool);
+              };
+            }
+            card.innerText = tok;
+            poolBox.appendChild(card);
+          });
+        }
+
+        function resetSortQuiz() {
+          selectedTokens = [];
+          const quiz = SORT_QUIZZES[currentSIndex];
+          const pool = [...quiz.tokens].sort(() => Math.random() - 0.5);
+          renderSortLayout(pool);
+        }
+
+        function checkSortAnswer() {
+          const joined = selectedTokens.join('');
+          const quiz = SORT_QUIZZES[currentSIndex];
+          
+          if (joined === quiz.correctStr.replace(/\s+/g, '')) {
+            alert('拼接完全正确！');
+            AudioCenter.speak(joined);
+            currentSIndex = (currentSIndex + 1) % SORT_QUIZZES.length;
+            nextSortQuestion();
+          } else {
+            alert('顺序好像不太对，再试一次吧！');
+          }
+        }
+      </script>
+    </section>
+
+    <section id="vocab" class="tab-content">
+      <style>
+        .vocab-nav {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 2rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 1rem;
+        }
+        .vocab-nav button {
+          background: transparent;
+          border: none;
+          color: var(--color-text-muted);
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0.5rem 1rem;
+          transition: var(--transition-smooth);
+        }
+        .vocab-nav button.active {
+          color: var(--color-primary);
+          border-bottom: 2px solid var(--color-primary);
+        }
+        .vocab-panel {
+          display: none;
+        }
+        .vocab-panel.active {
+          display: block;
+        }
+        /* 单词浏览器 */
+        .vocab-filter-bar {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1.5rem;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+        .vocab-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1.5rem;
+        }
+        .word-item-card {
+          position: relative;
+          padding: 1.5rem;
+        }
+        .word-delete-btn {
+          position: absolute;
+          top: 0.8rem;
+          right: 0.8rem;
+          background: transparent;
+          border: none;
+          color: rgba(255,255,255,0.3);
+          cursor: pointer;
+          font-size: 1.2rem;
+        }
+        .word-delete-btn:hover {
+          color: var(--color-accent);
+        }
+        /* SRS闪卡卡片 */
+        .flashcard-box {
+          max-width: 450px;
+          margin: 0 auto;
+          min-height: 280px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          text-align: center;
+          padding: 2.5rem;
+        }
+        .flashcard-main {
+          font-size: 3rem;
+          font-weight: 800;
+          color: var(--color-primary);
+          margin-bottom: 1rem;
+          text-shadow: var(--shadow-neon);
+        }
+        .flashcard-sub {
+          font-size: 1.3rem;
+          color: var(--color-text-muted);
+          margin-bottom: 1rem;
+        }
+        .flashcard-details {
+          border-top: 1px dashed rgba(255,255,255,0.1);
+          padding-top: 1.5rem;
+          margin-top: 1rem;
+          display: none;
+        }
+        .srs-buttons {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0.5rem;
+          margin-top: 1.5rem;
+        }
+        .srs-btn {
+          border: none;
+          color: white;
+          padding: 0.6rem 0.4rem;
+          font-size: 0.8rem;
+          font-weight: bold;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: var(--transition-smooth);
+        }
+        .srs-btn-1 { background: #ff4757; }
+        .srs-btn-2 { background: #ffa502; }
+        .srs-btn-3 { background: #2ed573; }
+        .srs-btn-5 { background: #1e90ff; }
+        .srs-btn:hover { opacity: 0.8; transform: scale(1.05); }
+      </style>
+
+      <div class="vocab-nav">
+        <button id="btn-v-srs" class="active" onclick="switchVocabPanel('srs')">SRS智能复习</button>
+        <button id="btn-v-browse" onclick="switchVocabPanel('browse')">单词本浏览器</button>
+        <button id="btn-v-add" onclick="switchVocabPanel('add')">新增生词</button>
+        <button id="btn-v-quiz" onclick="switchVocabPanel('quiz')">自测测验</button>
+      </div>
+
+      <!-- 面板 1: SRS 复习 -->
+      <div id="vocab-panel-srs" class="vocab-panel active">
+        <div id="srs-empty-box" style="text-align:center; display:none;" class="glass-card">
+          <span style="font-size: 4rem">🎉</span>
+          <h3 style="margin-top: 1rem">太棒了！你目前没有任何需要复习的单词。</h3>
+          <p style="color: var(--color-text-muted); margin-top: 0.5rem;">去单词本中浏览，或者利用歌词解析添加一些新词汇吧！</p>
+        </div>
+        <div id="srs-card-box" class="glass-card flashcard-box">
+          <div>
+            <div style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom: 1rem;" id="srs-queue-num">剩余: 0</div>
+            <div class="flashcard-main" id="srs-word-jp">学校</div>
+            <button class="btn-outline" style="padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="AudioCenter.speak(document.getElementById('srs-word-jp').innerText)">🔊 朗读</button>
+            
+            <div class="flashcard-details" id="srs-card-details">
+              <div class="flashcard-sub" id="srs-word-kana">がっこう (gakkou)</div>
+              <h4 style="font-size: 1.4rem; color: var(--color-success)" id="srs-word-cn">学校</h4>
+              <span class="grammar-tag tag-particle" id="srs-word-tag" style="margin-top: 0.8rem; display:inline-block">日常</span>
+            </div>
+          </div>
+
+          <div id="srs-action-box" style="width: 100%">
+            <button class="btn-neon" style="width:100%" id="srs-reveal-btn" onclick="revealSrsCard()">显示释义</button>
+            <div class="srs-buttons" id="srs-grading-box" style="display:none">
+              <button class="srs-btn srs-btn-1" onclick="submitSrsGrade(1)">完全忘 (1)</button>
+              <button class="srs-btn srs-btn-2" onclick="submitSrsGrade(2)">想不出 (2)</button>
+              <button class="srs-btn srs-btn-3" onclick="submitSrsGrade(3)">想得起 (3)</button>
+              <button class="srs-btn srs-btn-5" onclick="submitSrsGrade(5)">秒认 (5)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 面板 2: 单词浏览器 -->
+      <div id="vocab-panel-browse" class="vocab-panel">
+        <div class="vocab-filter-bar">
+          <div>
+            <button class="btn-outline" onclick="filterVocab('all')">全部分类</button>
+            <button class="btn-outline" onclick="filterVocab('日常')">日常</button>
+            <button class="btn-outline" onclick="filterVocab('运动')">运动</button>
+            <button class="btn-outline" onclick="filterVocab('异世界')">异世界</button>
+            <button class="btn-outline" onclick="filterVocab('custom')">自定义</button>
+          </div>
+          <span style="color: var(--color-text-muted); font-size: 0.95rem; display:flex; align-items:center;" id="vocab-total-count">共 0 个单词</span>
+        </div>
+        <div class="vocab-grid" id="vocab-items-container"></div>
+      </div>
+
+      <!-- 面板 3: 新增生词 -->
+      <div id="vocab-panel-add" class="vocab-panel glass-card" style="max-width: 500px; margin: 0 auto;">
+        <h3 style="margin-bottom: 1.5rem">添加自定义生词</h3>
+        <div style="display:flex; flex-direction:column; gap:1.2rem">
+          <div>
+            <label style="display:block; margin-bottom: 0.4rem">日文汉字/假名</label>
+            <input type="text" id="add-v-word" class="input-field" placeholder="例：友達">
+          </div>
+          <div>
+            <label style="display:block; margin-bottom: 0.4rem">纯假名读音/罗马字</label>
+            <input type="text" id="add-v-kana" class="input-field" placeholder="例：ともだち (tomodachi)">
+          </div>
+          <div>
+            <label style="display:block; margin-bottom: 0.4rem">中文解释</label>
+            <input type="text" id="add-v-meaning" class="input-field" placeholder="例：朋友">
+          </div>
+          <div>
+            <label style="display:block; margin-bottom: 0.4rem">分类归属</label>
+            <select id="add-v-category" class="input-field">
+              <option value="custom">自定义 (Custom)</option>
+              <option value="日常">日常</option>
+              <option value="运动">运动</option>
+              <option value="异世界">异世界</option>
+            </select>
+          </div>
+          <button class="btn-neon" onclick="saveNewCustomWord()">确认保存</button>
+        </div>
+      </div>
+
+      <!-- 面板 4: 自测测验 -->
+      <div id="vocab-panel-quiz" class="vocab-panel">
+        <div class="glass-card" style="max-width: 550px; margin: 0 auto; text-align: center;">
+          <h3 id="vq-progress" style="margin-bottom: 1.5rem; color:var(--color-text-muted)">自测进行中</h3>
+          <div id="vq-question" style="font-size: 2.2rem; font-weight:800; color:var(--color-primary); margin: 2rem 0;">ともだち</div>
+          <button class="btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; margin-bottom: 1.5rem" onclick="AudioCenter.speak(document.getElementById('vq-question').innerText)">🔊 朗读</button>
+          
+          <div id="vq-options" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;"></div>
+        </div>
+      </div>
+
+      <script>
+        // 内置默认 N5 核心词汇
+        const DEFAULT_VOCABULARY = [
+          { word: '試合', kana: 'しあい (shiai)', meaning: '比赛', category: '运动' },
+          { word: '勝つ', kana: 'かつ (katsu)', meaning: '赢', category: '运动' },
+          { word: '負ける', kana: 'まける (makeru)', meaning: '输', category: '运动' },
+          { word: '練習', kana: 'れんしゅう (renshuu)', meaning: '练习', category: '运动' },
+          { word: '魔法', kana: 'まほう (mahou)', meaning: '魔法', category: '异世界' },
+          { word: '仲間', kana: 'なかま (nakama)', meaning: '伙伴', category: '异世界' },
+          { word: '冒険', kana: 'ぼうけん (bouken)', meaning: '冒险', category: '异世界' },
+          { word: '道具', kana: 'どうぐ (dougu)', meaning: '道具/工具', category: '异世界' },
+          { word: '朝ご飯', kana: 'あさごはん (asagohan)', meaning: '早饭', category: '日常' },
+          { word: '学校', kana: 'がっこう (gakkou)', meaning: '学校', category: '日常' },
+          { word: '電車', kana: 'でんしゃ (densha)', meaning: '电车', category: '日常' },
+          { word: '友達', kana: 'ともだち (tomodachi)', meaning: '朋友', category: '日常' }
+        ];
+
+        let srsQueue = [];
+        let currentSrsIndex = 0;
+        let activeFilter = 'all';
+
+        // 初始化
+        function init_vocab() {
+          let list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+          if (list.length === 0) {
+            // 装填默认词汇并初始化 SRS 参数
+            list = DEFAULT_VOCABULARY.map(item => ({
+              ...item,
+              id: Date.now() + Math.random().toString(36).substr(2, 5),
+              srs: {
+                easeFactor: 2.5,
+                interval: 0,
+                repetitions: 0,
+                nextReviewDate: Date.now()
+              }
+            }));
+            localStorage.setItem('vocab_list', JSON.stringify(list));
+          }
+          
+          refreshSrsQueue();
+          renderVocabItems();
+          nextVocabQuizQuestion();
+        }
+
+        function switchVocabPanel(panelId) {
+          document.querySelectorAll('.vocab-panel').forEach(p => p.classList.remove('active'));
+          document.querySelectorAll('.vocab-nav button').forEach(b => b.classList.remove('active'));
+          
+          document.getElementById(`vocab-panel-${panelId}`).classList.add('active');
+          document.getElementById(`btn-v-${panelId}`).classList.add('active');
+
+          if (panelId === 'srs') refreshSrsQueue();
+          if (panelId === 'browse') renderVocabItems();
+        }
+
+        // SM-2 间隔重复算法
+        function calculateSM2(q, repetitions, interval, easeFactor) {
+          if (q < 3) {
+            repetitions = 0;
+            interval = 1;
+          } else {
+            if (repetitions === 0) {
+              interval = 1;
+            } else if (repetitions === 1) {
+              interval = 4; // 测试期缩短（常规是6天）
+            } else {
+              interval = Math.round(interval * easeFactor);
+            }
+            repetitions++;
+          }
+          easeFactor = easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+          if (easeFactor < 1.3) easeFactor = 1.3;
+          return { repetitions, interval, easeFactor };
+        }
+
+        // 刷新待复习队列
+        function refreshSrsQueue() {
+          const list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+          const now = Date.now();
+          srsQueue = list.filter(item => !item.srs || item.srs.nextReviewDate <= now);
+          
+          const srsCard = document.getElementById('srs-card-box');
+          const emptyCard = document.getElementById('srs-empty-box');
+
+          if (srsQueue.length === 0) {
+            srsCard.style.display = 'none';
+            emptyCard.style.display = 'block';
+          } else {
+            srsCard.style.display = 'flex';
+            emptyCard.style.display = 'none';
+            currentSrsIndex = 0;
+            showSrsCard();
+          }
+        }
+
+        function showSrsCard() {
+          if (currentSrsIndex >= srsQueue.length) {
+            refreshSrsQueue();
+            return;
+          }
+          const item = srsQueue[currentSrsIndex];
+          document.getElementById('srs-queue-num').innerText = `本轮剩余: ${srsQueue.length - currentSrsIndex} 个`;
+          document.getElementById('srs-word-jp').innerText = item.word;
+          document.getElementById('srs-word-kana').innerText = item.kana;
+          document.getElementById('srs-word-cn').innerText = item.meaning;
+          document.getElementById('srs-word-tag').innerText = item.category;
+          
+          // 重置翻转
+          document.getElementById('srs-card-details').style.display = 'none';
+          document.getElementById('srs-reveal-btn').style.display = 'block';
+          document.getElementById('srs-grading-box').style.display = 'none';
+        }
+
+        function revealSrsCard() {
+          document.getElementById('srs-card-details').style.display = 'block';
+          document.getElementById('srs-reveal-btn').style.display = 'none';
+          document.getElementById('srs-grading-box').style.display = 'grid';
+          AudioCenter.speak(srsQueue[currentSrsIndex].word);
+        }
+
+        function submitSrsGrade(q) {
+          const item = srsQueue[currentSrsIndex];
+          const list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+          
+          const targetIndex = list.findIndex(i => i.id === item.id);
+          if (targetIndex !== -1) {
+            const srsObj = list[targetIndex].srs || { easeFactor: 2.5, interval: 0, repetitions: 0 };
+            const newSrs = calculateSM2(q, srsObj.repetitions, srsObj.interval, srsObj.easeFactor);
+            
+            // 下次复习时间 = 当前时间 + 间隔(天)
+            newSrs.nextReviewDate = Date.now() + newSrs.interval * 24 * 60 * 60 * 1000;
+            list[targetIndex].srs = newSrs;
+            
+            localStorage.setItem('vocab_list', JSON.stringify(list));
+          }
+
+          currentSrsIndex++;
+          showSrsCard();
+          updateDashboardStats();
+        }
+
+        // 单词浏览器渲染
+        function renderVocabItems() {
+          const container = document.getElementById('vocab-items-container');
+          container.innerHTML = '';
+          const list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+
+          const filtered = list.filter(item => activeFilter === 'all' || item.category === activeFilter);
+          document.getElementById('vocab-total-count').innerText = `共 ${filtered.length} 个单词`;
+
+          filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'glass-card word-item-card';
+            
+            let badgeClass = 'tag-pattern';
+            if (item.category === '日常') badgeClass = 'tag-particle';
+            else if (item.category === '运动') badgeClass = 'tag-verb';
+
+            card.innerHTML = `
+              <button class="word-delete-btn" onclick="deleteWord('${item.id}')">✕</button>
+              <div style="font-size:1.6rem; font-weight:800; cursor:pointer;" onclick="AudioCenter.speak('${item.word}')">🔊 ${item.word}</div>
+              <div style="color:var(--color-text-muted); margin: 0.3rem 0;">${item.kana}</div>
+              <div style="color:var(--color-success); font-weight:600; font-size:1.1rem; margin-top: 0.5rem">${item.meaning}</div>
+              <div style="margin-top:0.8rem"><span class="grammar-tag ${badgeClass}">${item.category}</span></div>
+            `;
+            container.appendChild(card);
+          });
+        }
+
+        function filterVocab(category) {
+          activeFilter = category;
+          renderVocabItems();
+        }
+
+        function deleteWord(id) {
+          if (!confirm('确认删除该单词吗？')) return;
+          const list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+          const updated = list.filter(item => item.id !== id);
+          localStorage.setItem('vocab_list', JSON.stringify(updated));
+          renderVocabItems();
+          updateDashboardStats();
+        }
+
+        // 保存新词
+        function saveNewCustomWord() {
+          const word = document.getElementById('add-v-word').value.trim();
+          const kana = document.getElementById('add-v-kana').value.trim();
+          const meaning = document.getElementById('add-v-meaning').value.trim();
+          const category = document.getElementById('add-v-category').value;
+
+          if (!word || !kana || !meaning) {
+            alert('请完整填写表单！');
+            return;
+          }
+
+          const list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+          list.push({
+            id: Date.now() + Math.random().toString(36).substr(2, 5),
+            word, kana, meaning, category,
+            srs: {
+              easeFactor: 2.5,
+              interval: 0,
+              repetitions: 0,
+              nextReviewDate: Date.now()
+            }
+          });
+
+          localStorage.setItem('vocab_list', JSON.stringify(list));
+          
+          // 清空输入框
+          document.getElementById('add-v-word').value = '';
+          document.getElementById('add-v-kana').value = '';
+          document.getElementById('add-v-meaning').value = '';
+          
+          alert('单词保存成功！');
+          switchVocabPanel('browse');
+          updateDashboardStats();
+        }
+
+        // 自测测验逻辑
+        let vocabQuizQuestions = [];
+        let currentVQIndex = 0;
+
+        function nextVocabQuizQuestion() {
+          const list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+          if (list.length < 4) {
+            document.getElementById('vq-question').innerText = '单词数不足4个，请先添加单词。';
+            document.getElementById('vq-options').innerHTML = '';
+            return;
+          }
+
+          // 随机挑选一个作为正确答案
+          const correct = list[Math.floor(Math.random() * list.length)];
+          const mode = Math.random() > 0.5 ? 'jp-to-cn' : 'cn-to-jp';
+
+          document.getElementById('vq-question').innerText = mode === 'jp-to-cn' ? correct.word : correct.meaning;
+
+          // 生成混淆项
+          let options = [correct];
+          while (options.length < 4) {
+            const r = list[Math.floor(Math.random() * list.length)];
+            if (!options.some(o => o.id === r.id)) options.push(r);
+          }
+          options.sort(() => Math.random() - 0.5);
+
+          const optBox = document.getElementById('vq-options');
+          optBox.innerHTML = '';
+          options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = mode === 'jp-to-cn' ? opt.meaning : opt.word;
+            btn.onclick = () => {
+              document.querySelectorAll('#vq-options button').forEach(b => b.disabled = true);
+              if (opt.id === correct.id) {
+                btn.classList.add('correct');
+                AudioCenter.speak(correct.word);
+              } else {
+                btn.classList.add('wrong');
+                // 找出正确的高亮
+                Array.from(document.querySelectorAll('#vq-options button')).find(b => b.innerText === (mode === 'jp-to-cn' ? correct.meaning : correct.word)).classList.add('correct');
+              }
+              setTimeout(nextVocabQuizQuestion, 1600);
+            };
+            optBox.appendChild(btn);
+          });
+        }
+      </script>
+    </section>
+
+    <section id="parser" class="tab-content">
+      <style>
+        .parser-container {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+        .typing-track {
+          display: none;
+          flex-direction: column;
+          gap: 1.5rem;
+          margin-top: 1rem;
+        }
+        .sentence-display {
+          font-size: 2.2rem;
+          font-weight: 800;
+          letter-spacing: 1px;
+          min-height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          color: var(--color-text-main);
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          padding-bottom: 1.5rem;
+        }
+        .typing-stats {
+          display: flex;
+          justify-content: space-around;
+          background: rgba(0,0,0,0.2);
+          padding: 1rem;
+          border-radius: 8px;
+          font-size: 0.9rem;
+          color: var(--color-text-muted);
+        }
+        .extracted-words-section {
+          margin-top: 2rem;
+          border-top: 1px solid rgba(255,255,255,0.1);
+          padding-top: 1.5rem;
+        }
+        .extracted-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+        .extracted-card {
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.05);
+          padding: 1.2rem;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+      </style>
+
+      <div class="glass-card parser-container" id="parser-input-box">
+        <h3>万能文本解析练习场 (粘贴歌词/台词)</h3>
+        <p style="color: var(--color-text-muted)">粘贴你喜欢的日摇歌词、动漫台词、小说段落，系统将自动拆分并生成你的专属发音打字练习课！</p>
+        
+        <div>
+          <textarea id="parser-raw-text" class="input-field" rows="10" placeholder="在此粘贴日文内容，例如：
+あの日見た花の名前を僕達はまだ知らない。
+俺は海賊王になる男だ！" style="resize:vertical"></textarea>
+        </div>
+
+        <div style="display:flex; gap:1rem">
+          <button class="btn-neon" onclick="startTextParsing()">解析并开始练习</button>
+          <button class="btn-outline" onclick="loadSampleLyrics()">加载示例歌词(日摇/天体观测)</button>
+        </div>
+      </div>
+
+      <!-- 打字与解析轨迹面板 -->
+      <div class="glass-card typing-track" id="parser-typing-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="btn-outline" style="padding:0.4rem 0.8rem" onclick="exitTypingTrack()">✕ 退出练习</button>
+          <h4 id="typing-track-title">文本打字训练轨</h4>
+          <span id="typing-sentence-index" style="color:var(--color-text-muted)">0 / 0</span>
+        </div>
+
+        <div class="sentence-display" id="typing-target-sentence">あの日見た花の名前を僕達はまだ知らない。</div>
+        
+        <div style="display:flex; gap:1rem; justify-content:center; align-items:center">
+          <button class="btn-neon" style="padding:0.5rem 1rem" onclick="playCurrentSentenceVoice()">🔊 听写伴读</button>
+          <span style="font-size:0.85rem; color:var(--color-text-muted)">提示：点击上方按钮，或敲击输入框后按 Enter 即可自动朗读。</span>
+        </div>
+
+        <div>
+          <input type="text" id="typing-input-field" class="input-field" placeholder="请在此输入对应的日文（可使用日语输入法直接拼写）" style="font-size:1.4rem; text-align:center; padding:1.2rem" oninput="checkTypingProgress()" onkeydown="handleTypingKeyDown(event)">
+        </div>
+
+        <div class="typing-stats">
+          <span>当前句相似度: <strong id="typing-stat-match" style="color:var(--color-primary)">0%</strong></span>
+          <span>打字总字数: <strong id="typing-stat-chars" style="color:white">0</strong></span>
+        </div>
+
+        <!-- 提取出的汉字生词本 -->
+        <div class="extracted-words-section" id="extracted-section" style="display:none">
+          <h3 style="border-left:4px solid var(--color-secondary); padding-left:10px;">智能提取的汉字生词候选</h3>
+          <p style="color: var(--color-text-muted); font-size:0.85rem; margin-top:0.3rem">系统识别出的汉字生词，输入假名和解释即可一键加入你的【単語帳】。</p>
+          <div class="extracted-grid" id="extracted-words-container"></div>
+        </div>
+      </div>
+
+      <script>
+        let parsedSentences = [];
+        let currentSentenceIndex = 0;
+        let totalTypedChars = 0;
+
+        function init_parser() {
+          // 模块重置
+        }
+
+        // 加载示例歌词
+        function loadSampleLyrics() {
+          const sample = `天体観測 (BUMP OF CHICKEN)
+午前二時 フミキリに 望遠鏡を担いでった
+ベルトに結んだラジオ 雨は降らないらしい
+二分後に君が来たら 履いてきた長靴
+何の話をしようかな`;
+          document.getElementById('parser-raw-text').value = sample.trim();
+        }
+
+        function startTextParsing() {
+          const text = document.getElementById('parser-raw-text').value.trim();
+          if (!text) {
+            alert('请先输入内容！');
+            return;
+          }
+
+          // 过滤掉空白行，按换行切分
+          parsedSentences = text.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+          
+          if (parsedSentences.length === 0) {
+            alert('未能提取出有效段落！');
+            return;
+          }
+
+          currentSentenceIndex = 0;
+          totalTypedChars = 0;
+
+          document.getElementById('parser-input-box').style.display = 'none';
+          document.getElementById('parser-typing-box').style.display = 'flex';
+          
+          loadTypingSentence();
+          extractWordsFromText(text);
+        }
+
+        function loadTypingSentence() {
+          if (currentSentenceIndex >= parsedSentences.length) {
+            alert('恭喜你，完成了整篇文本的打字和朗读练习！');
+            exitTypingTrack();
+            return;
+          }
+
+          const target = parsedSentences[currentSentenceIndex];
+          document.getElementById('typing-target-sentence').innerText = target;
+          document.getElementById('typing-sentence-index').innerText = `${currentSentenceIndex + 1} / ${parsedSentences.length}`;
+          
+          const input = document.getElementById('typing-input-field');
+          input.value = '';
+          input.style.borderColor = 'rgba(255,255,255,0.1)';
+          document.getElementById('typing-stat-match').innerText = '0%';
+          
+          // 自动播放语音
+          AudioCenter.speak(target);
+          input.focus();
+        }
+
+        function playCurrentSentenceVoice() {
+          const target = parsedSentences[currentSentenceIndex];
+          if (target) AudioCenter.speak(target);
+        }
+
+        // 判定打字匹配进度
+        function checkTypingProgress() {
+          const target = parsedSentences[currentSentenceIndex];
+          const inputVal = document.getElementById('typing-input-field').value;
+          const matchPercentEl = document.getElementById('typing-stat-match');
+          
+          // 计算匹配前缀相似度
+          let matchCount = 0;
+          const minLen = Math.min(target.length, inputVal.length);
+          for (let i = 0; i < minLen; i++) {
+            if (target[i] === inputVal[i]) matchCount++;
+          }
+
+          const percent = target.length > 0 ? Math.round((matchCount / target.length) * 100) : 0;
+          matchPercentEl.innerText = `${percent}%`;
+
+          const inputField = document.getElementById('typing-input-field');
+          if (inputVal === target) {
+            inputField.style.borderColor = 'var(--color-success)';
+          } else if (percent > 50) {
+            inputField.style.borderColor = 'var(--color-primary)';
+          } else {
+            inputField.style.borderColor = 'rgba(255,255,255,0.1)';
+          }
+        }
+
+        function handleTypingKeyDown(e) {
+          if (e.key === 'Enter') {
+            const target = parsedSentences[currentSentenceIndex];
+            const inputVal = document.getElementById('typing-input-field').value.trim();
+
+            if (inputVal === target.trim()) {
+              totalTypedChars += target.length;
+              document.getElementById('typing-stat-chars').innerText = totalTypedChars;
+              
+              currentSentenceIndex++;
+              loadTypingSentence();
+            } else {
+              // 若不一致，按下 Enter 播放发音辅助听写
+              playCurrentSentenceVoice();
+            }
+          }
+        }
+
+        function exitTypingTrack() {
+          document.getElementById('parser-input-box').style.display = 'block';
+          document.getElementById('parser-typing-box').style.display = 'none';
+        }
+
+        // 汉字提取逻辑
+        function extractWordsFromText(text) {
+          const container = document.getElementById('extracted-words-container');
+          container.innerHTML = '';
+          
+          // 正则匹配提取汉字开头的词（包含后续的假名如 送り仮名，如 食べる、勉強）
+          // [一-龠]+[ぁ-ん]* 匹配日文汉字+接续假名
+          const regex = /[一-龠]+[ぁ-ん]*/g;
+          let match;
+          const foundWords = new Set();
+          
+          while ((match = regex.exec(text)) !== null) {
+            if (match[0].length >= 2) { // 剔除单字
+              foundWords.add(match[0]);
+            }
+          }
+
+          if (foundWords.size === 0) {
+            document.getElementById('extracted-section').style.display = 'none';
+            return;
+          }
+
+          document.getElementById('extracted-section').style.display = 'block';
+          
+          // 渲染提取到的生词添加面板
+          foundWords.forEach(word => {
+            const card = document.createElement('div');
+            card.className = 'extracted-card';
+            card.innerHTML = `
+              <div style="font-size:1.3rem; font-weight:800; color:var(--color-primary)">${word}</div>
+              <div>
+                <input type="text" placeholder="拼音读音(例：taberu)" class="input-field" style="padding:0.4rem; font-size:0.85rem;" id="ext-read-${word}">
+              </div>
+              <div>
+                <input type="text" placeholder="中文解释(例：吃)" class="input-field" style="padding:0.4rem; font-size:0.85rem;" id="ext-mean-${word}">
+              </div>
+              <button class="btn-outline" style="padding:0.4rem; font-size:0.85rem; width:100%" onclick="addExtractedWordToVocab('${word}')">加入单词本</button>
+            `;
+            container.appendChild(card);
+          });
+        }
+
+        function addExtractedWordToVocab(word) {
+          const reading = document.getElementById(`ext-read-${word}`).value.trim();
+          const meaning = document.getElementById(`ext-mean-${word}`).value.trim();
+
+          if (!reading || !meaning) {
+            alert('请先填写读音与释义！');
+            return;
+          }
+
+          const list = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+          
+          // 查重
+          if (list.some(i => i.word === word)) {
+            alert('该单词已在单词本中！');
+            return;
+          }
+
+          list.push({
+            id: Date.now() + Math.random().toString(36).substr(2, 5),
+            word: word,
+            kana: reading,
+            meaning: meaning,
+            category: 'custom',
+            srs: {
+              easeFactor: 2.5,
+              interval: 0,
+              repetitions: 0,
+              nextReviewDate: Date.now()
+            }
+          });
+
+          localStorage.setItem('vocab_list', JSON.stringify(list));
+          alert(`【${word}】成功加入单词本！`);
+          updateDashboardStats();
+        }
+      </script>
+    </section>
+
+    <section id="data" class="tab-content">
+      <style>
+        .data-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 2rem;
+        }
+        .data-card {
+          display: flex;
+          flex-direction: column;
+          gap: 1.2rem;
+        }
+        .weak-kana-badge {
+          background: rgba(255, 0, 127, 0.15);
+          border: 1px solid var(--color-accent);
+          color: white;
+          padding: 0.4rem 0.8rem;
+          border-radius: 6px;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-weight: bold;
+        }
+      </style>
+
+      <div class="data-grid">
+        <!-- 统计与薄弱分析 -->
+        <div class="glass-card data-card">
+          <h3 style="border-left:4px solid var(--color-accent); padding-left:10px;">假名薄弱点归档</h3>
+          <p style="color: var(--color-text-muted); font-size:0.85rem">系统自动归纳你在自测中错误次数大于0的假名：</p>
+          <div id="weak-kana-container" style="display:flex; flex-wrap:wrap; gap:0.5rem">
+            <span style="color:var(--color-text-muted); font-size:0.9rem">暂无薄弱假名记录，继续保持！</span>
+          </div>
+        </div>
+
+        <!-- 数据文件管理 -->
+        <div class="glass-card data-card">
+          <h3 style="border-left:4px solid var(--color-primary); padding-left:10px;">备份与控制中心</h3>
+          <p style="color: var(--color-text-muted); font-size:0.85rem">你可以将本地的学习记录、生词本（包含记忆算法周期）导出为 JSON 文件保存，或在其他设备上导入恢复。</p>
+          
+          <div>
+            <button class="btn-neon" style="width:100%" onclick="exportProgressJSON()">导出备份数据 (JSON)</button>
+          </div>
+
+          <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:1.2rem; display:flex; flex-direction:column; gap:0.8rem">
+            <label style="font-size:0.85rem; color:var(--color-text-muted)">从备份文件恢复进度：</label>
+            <input type="file" id="import-file-selector" class="input-field" accept=".json" style="padding:0.4rem">
+            <button class="btn-outline" style="width:100%" onclick="importProgressJSON()">执行导入恢复</button>
+          </div>
+        </div>
+
+        <!-- 系统重置 -->
+        <div class="glass-card data-card">
+          <h3 style="border-left:4px solid #ff4757; padding-left:10px; color:#ff4757">危险区</h3>
+          <p style="color: var(--color-text-muted); font-size:0.85rem">清空本地存储的所有历史记录与单词本，恢复出厂设置。</p>
+          <button class="btn-outline" style="border-color:#ff4757; color:#ff4757" onclick="resetAllProgress()">完全清空所有数据</button>
+        </div>
+      </div>
+
+      <script>
+        function init_data() {
+          renderWeakKana();
+        }
+
+        // 渲染薄弱假名
+        function renderWeakKana() {
+          const container = document.getElementById('weak-kana-container');
+          const mastery = JSON.parse(localStorage.getItem('kana_mastery') || '{}');
+          const weakList = [];
+
+          Object.entries(mastery).forEach(([char, record]) => {
+            if (record.wrong > 0) {
+              weakList.push({ char, wrong: record.wrong });
+            }
+          });
+
+          if (weakList.length === 0) {
+            container.innerHTML = `<span style="color:var(--color-text-muted); font-size:0.9rem">暂无薄弱假名记录，继续保持！</span>`;
+            return;
+          }
+
+          // 降序排序
+          weakList.sort((a, b) => b.wrong - a.wrong);
+          container.innerHTML = '';
+          weakList.forEach(item => {
+            const badge = document.createElement('span');
+            badge.className = 'weak-kana-badge';
+            badge.innerHTML = `${item.char} <span style="font-size:0.75rem; opacity:0.7">错误x${item.wrong}</span>`;
+            badge.onclick = () => AudioCenter.speak(item.char);
+            container.appendChild(badge);
+          });
+        }
+
+        // 备份导出
+        function exportProgressJSON() {
+          const backup = {
+            kana_mastery: JSON.parse(localStorage.getItem('kana_mastery') || '{}'),
+            vocab_list: JSON.parse(localStorage.getItem('vocab_list') || '[]'),
+            streak: localStorage.getItem('streak') || '0',
+            lastStudyDate: localStorage.getItem('lastStudyDate') || ''
+          };
+
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+          const dlAnchor = document.createElement('a');
+          dlAnchor.setAttribute("href", dataStr);
+          dlAnchor.setAttribute("download", `japanese_station_progress_${new Date().toISOString().slice(0,10)}.json`);
+          document.body.appendChild(dlAnchor);
+          dlAnchor.click();
+          dlAnchor.remove();
+        }
+
+        // 备份导入
+        function importProgressJSON() {
+          const fileInput = document.getElementById('import-file-selector');
+          if (!fileInput.files.length) {
+            alert('请先选择备份 JSON 文件！');
+            return;
+          }
+
+          const file = fileInput.files[0];
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            try {
+              const data = JSON.parse(e.target.result);
+              if (data.kana_mastery) localStorage.setItem('kana_mastery', JSON.stringify(data.kana_mastery));
+              if (data.vocab_list) localStorage.setItem('vocab_list', JSON.stringify(data.vocab_list));
+              if (data.streak) localStorage.setItem('streak', data.streak);
+              if (data.lastStudyDate) localStorage.setItem('lastStudyDate', data.lastStudyDate);
+
+              alert('进度数据恢复成功！');
+              window.location.reload();
+            } catch (err) {
+              alert('JSON 解析失败，请上传正确的备份文件！');
+            }
+          };
+          reader.readAsText(file);
+        }
+
+        // 完全重置
+        function resetAllProgress() {
+          if (confirm('此操作不可逆！确认清空所有进度数据吗？')) {
+            localStorage.clear();
+            alert('数据已重置，系统正在重新载入。');
+            window.location.reload();
+          }
+        }
+      </script>
+    </section>
+
+  </main>
+
+  <script>
+    /* 全局数据与控制逻辑 */
+
+    // Tab 导航控制
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.classList.add('active');
+      
+      const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (btn) btn.classList.add('active');
+
+      // 切换Tab时触发对应的模块生命周期钩子
+      if (typeof window[`init_${tabId}`] === 'function') {
+        window[`init_${tabId}`]();
+      }
+    }
+
+    // TTS 语音合成库
+    const AudioCenter = {
+      voices: [],
+      init() {
+        if ('speechSynthesis' in window) {
+          const loadVoices = () => {
+            this.voices = window.speechSynthesis.getVoices();
+          };
+          loadVoices();
+          if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+          }
+        }
+      },
+      speak(text, callback) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel(); // 终止前一次发音
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // 寻找最优日语发音引擎
+        const jpVoice = this.voices.find(v => v.lang.startsWith('ja')) || 
+                        this.voices.find(v => v.lang.includes('JP'));
+        if (jpVoice) utterance.voice = jpVoice;
+        utterance.rate = 0.85; // 稍慢语速，适合初学者
+
+        if (callback) utterance.onend = callback;
+        window.speechSynthesis.speak(utterance);
+      }
+    };
+
+    // 初始化全局事件与持久化存储状态
+    document.addEventListener("DOMContentLoaded", () => {
+      AudioCenter.init();
+      initAppState();
+    });
+
+    function initAppState() {
+      // 检查学习历史
+      const now = new Date().toDateString();
+      const lastStudyDate = localStorage.getItem('lastStudyDate');
+      let streak = parseInt(localStorage.getItem('streak') || '0');
+
+      if (lastStudyDate) {
+        const last = new Date(lastStudyDate);
+        const today = new Date(now);
+        const diffTime = Math.abs(today - last);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) {
+          streak += 1;
+        } else if (diffDays > 1) {
+          streak = 1; // 断签重新计算
+        }
+      } else {
+        streak = 1; // 首次登录
+      }
+      localStorage.setItem('streak', streak);
+      localStorage.setItem('lastStudyDate', now);
+      
+      document.getElementById('streak-val').innerText = `${streak} 天`;
+      
+      // 更新SRS和假名队列卡片
+      updateDashboardStats();
+    }
+
+    function updateDashboardStats() {
+      // 50音掌握进度
+      const masteryData = JSON.parse(localStorage.getItem('kana_mastery') || '{}');
+      const totalKana = 92; // 46平假名 + 46片假名
+      let mastered = 0;
+      Object.values(masteryData).forEach(val => {
+        if (val.correct >= 3) mastered++; // 对了3遍算基本掌握
+      });
+      const masteryPercent = Math.round((mastered / totalKana) * 100);
+      document.getElementById('kana-mastery-val').innerText = `${masteryPercent}%`;
+
+      // 单词SRS到期数
+      const vocabList = JSON.parse(localStorage.getItem('vocab_list') || '[]');
+      const nowMs = Date.now();
+      const reviewCount = vocabList.filter(item => {
+        return item.srs && item.srs.nextReviewDate <= nowMs;
+      }).length;
+      document.getElementById('review-val').innerText = reviewCount;
+    }
+  </script>
+</body>
+</html>
